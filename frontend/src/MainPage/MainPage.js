@@ -23,6 +23,21 @@ const MainPage = ({ token, isLoggedIn }) => {
         }
     }, [isLoggedIn]);
 
+    const fetchHabits = async () => {
+        try {
+            const response = await fetch('http://localhost:2000/habits', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const data = await response.json();
+            setHabits(data);
+        } catch (error) {
+            console.error('Failed to fetch habits:', error);
+        }
+    };
+
     const handleToggleHabit = async (habit) => {
         const date = selectedDate.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
 
@@ -45,6 +60,7 @@ const MainPage = ({ token, isLoggedIn }) => {
                                 : h
                         )
                     );
+                    fetchHabits();
                 } else {
                     console.error('Failed to mark habit as incomplete:', await response.json());
                 }
@@ -70,6 +86,7 @@ const MainPage = ({ token, isLoggedIn }) => {
                                 : h
                         )
                     );
+                    fetchHabits();
                 } else {
                     console.error('Failed to mark habit as complete:', await response.json());
                 }
@@ -79,24 +96,14 @@ const MainPage = ({ token, isLoggedIn }) => {
         }
     };
 
-    const fetchHabits = async () => {
-        try {
-            const response = await fetch('http://localhost:2000/habits', {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const data = await response.json();
-            setHabits(data);
-        } catch (error) {
-            console.error('Failed to fetch habits:', error);
-        }
-    };
-
     const handleAddHabit = async () => {
         if (newHabit && frequencyDays.length > 0) {
-            const habit = { name: newHabit, frequencyDays, color: habitColor };
+            const habit = { 
+                name: newHabit, 
+                frequencyDays, 
+                color: habitColor, 
+                startDate: new Date().toISOString().split('T')[0] // Set start date to current date
+            };
             try {
                 const response = await fetch('http://localhost:2000/habits', {
                     method: 'POST',
@@ -113,9 +120,55 @@ const MainPage = ({ token, isLoggedIn }) => {
                     console.error('Failed to add habit:', data.error);
                 }
                 resetHabitForm();
+                fetchHabits();
             } catch (error) {
                 console.error('Failed to add habit:', error);
             }
+        }
+    };
+
+    const handleEditHabit = async (habitId, updatedHabit) => {
+        try {
+            const response = await fetch(`http://localhost:2000/habits/${habitId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(updatedHabit),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setHabits(prev =>
+                    prev.map(h =>
+                        h._id === habitId ? data : h
+                    )
+                );
+                fetchHabits();
+            } else {
+                console.error('Failed to edit habit:', data.error);
+            }
+        } catch (error) {
+            console.error('Failed to edit habit:', error);
+        }
+    };
+
+    const handleDeleteHabit = async (habitId) => {
+        try {
+            const response = await fetch(`http://localhost:2000/habits/${habitId}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (response.ok) {
+                setHabits(prev => prev.filter(h => h._id !== habitId));
+                fetchHabits();
+            } else {
+                console.error('Failed to delete habit:', await response.json());
+            }
+        } catch (error) {
+            console.error('Failed to delete habit:', error);
         }
     };
 
@@ -145,7 +198,13 @@ const MainPage = ({ token, isLoggedIn }) => {
           <DateCarousel selectedDate={selectedDate} changeDate={changeDate} />
 
           <h2>Habits for {selectedDate.toLocaleDateString('en-GB')}</h2>
-          <HabitList habits={habits.filter(habit => habit.frequencyDays.includes(selectedDate.getDay()))} selectedDate={selectedDate} handleToggleHabit={handleToggleHabit} />
+          <HabitList 
+              habits={habits.filter(habit => habit.frequencyDays.includes(selectedDate.getDay()))} 
+              selectedDate={selectedDate} 
+              handleToggleHabit={handleToggleHabit} 
+              handleEditHabit={handleEditHabit}
+              handleDeleteHabit={handleDeleteHabit}
+          />
 
           <button onClick={() => setShowAddHabitPopup(true)}>Add Habit</button>
 
