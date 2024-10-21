@@ -8,6 +8,7 @@ import Logout from './Logout';
 import Navbar from './NavBar/Navbar'; 
 import ForgotPassword from './ForgotPassword/ForgotPassword'; 
 import ResetPassword from './ResetPassword/ResetPassword';
+import Calendar from './MainPage/Calendar'; // Import the Calendar component
 
 const App = () => {
     const [token, setToken] = useState(localStorage.getItem('token'));
@@ -23,11 +24,10 @@ const App = () => {
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/logout" element={<Logout isLoggedIn={isLoggedIn} setToken={setToken} setIsLoggedIn={setIsLoggedIn}/>} />
+                <Route path="/calendar" element={<Calendar />} /> {/* Add route for Calendar */}
             </Routes>
         </Router>
     );
 };
 
 export default App;
-
-

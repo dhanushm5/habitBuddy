@@ -1,110 +1,240 @@
 .main-page {
-   padding: 10px;
-   font-family: Arial, sans-serif;
+    padding: 20px;
+    font-family: Arial, sans-serif;
 }
 
 .carousel {
-   display: flex;
-   align-items: center;
-   padding: 2px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
 }
 
 .nav-button {
-   background-color: #4db6ac;
-   border: none;
-   color: white;
-   margin: 0 10px;
-   border-radius: 20px;
-   width: 80px; /* Adjust width for a better fit */
-   height: 40px;
-   font-size: 16px;
-   cursor: pointer;
+    background-color: #4db6ac;
+    border: none;
+    color: white;
+    margin: 0 10px;
+    border-radius: 20px;
+    width: 80px; /* Adjust width for a better fit */
+    height: 40px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 .dates {
-   display: flex;
-   justify-content: space-around;
-   flex-grow: 1;
-   margin: 0 15px;
+    display: flex;
+    justify-content: space-around;
+    flex-grow: 1;
+    margin: 0 15px;
 }
 
 .date {
-   text-align: center;
-   margin-left: 5px;
-   margin-right: 5px;
-   font-size: 18px;
-   padding: 10px 0;
+    text-align: center;
+    margin: 5px;
+    font-size: 18px;
+    padding: 10px 0;
 }
 
 .selected {
-   font-weight: bold;
-   color: #4db6ac;
+    font-weight: bold;
+    color: #4db6ac;
 }
 
-.habits {
-   display: flex;
-   flex-direction: column;
-   padding: 10px;
-   width: 98%; /* Full width for the habit container */
+.habitlist {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    width: 100%; /* Full width for the habit container */
 }
 
 .habit {
-   display: flex;
-   flex-direction: row;
-   padding: 5px; /* Reduced padding for tighter spacing */
-   background-color: #4db6ac;
-   border-radius: 8px;
-   margin-bottom: 8px;
-   width: 100%; /* Full width */
-   /* Ensure padding/border fits within width */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    padding: 10px;
+    background-color: #4db6ac;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    width: 100%; /* Full width */
 }
 
 .habit span {
-   font-size: 16px;
-   color: black;
-   text-align: left; /* Align text to the left */
-   line-height: 1.5; /* Adjusts line height for better spacing */
+    font-size: 16px;
+    color: black;
+    text-align: left; /* Align text to the left */
+    line-height: 1.5; /* Adjusts line height for better spacing */
 }
 
-
 .popup {
-   position: fixed;
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
-   background-color: #fff;
-   padding: 20px;
-   border-radius: 8px;
-   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-   z-index: 1000;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: whitesmoke;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
 }
 
 .frequency-selector {
-   display: flex;
-   justify-content: space-between;
-   margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
 }
 
 .frequency-selector label {
-   margin-right: 5px;
-   display: flex;
-   align-items: center;
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
 }
 
 .color-picker {
-   margin-top: 15px;
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .color-picker input[type="color"] {
-   border: none;
-   cursor: pointer;
+    border: none;
+    cursor: pointer;
 }
 
 .completed {
-   text-decoration: line-through; /* Strikethrough effect */
-   color: gray; /* Dimmed color */
-   opacity: 0.6; /* Optional: further dimming */
+    text-decoration: line-through; /* Strikethrough effect */
+    color: gray; /* Dimmed color */
+    opacity: 0.5; /* Optional: further dimming */
+}
+
+.button-group {
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.stats-button,
+.edit-button,
+.delete-button {
+    display: flex; /* Enable flexbox for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    padding: 5px 15px; /* Padding adjusted for smaller buttons */
+    border: none; /* Remove extra border to reduce size */
+    border-radius: 5px;
+    font-size: 14px; /* Smaller font size */
+    cursor: pointer;
+}
+
+.stats-button {
+    background-color: #4caf50;
+    color: white;
+}
+
+.edit-button {
+    background-color: #ffeb3b;
+    color: black;
+}
+
+.delete-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.button-icon {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    align-items: center;
+    margin-right: 5px;
+}
+
+/* Avatar Section */
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.avatar-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffcc00; /* Default color */
+    width: 100px;
+    height: 100px;
+    border-radius: 50%; /* Default shape: circle */
+    position: relative;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-display span {
+    font-size: 24px;
+    position: absolute;
+}
+
+.avatar-builder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.avatar-builder h3 {
+    margin-bottom: 15px;
+}
+
+.avatar-builder label {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar-builder select,
+.avatar-builder input[type="color"] {
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.avatar-builder button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.avatar-builder button:hover {
+    background-color: #45a049;
+}
+
+/* Edit Avatar Button */
+.avatar-section button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.avatar-section button:hover {
+    background-color: #0056b3;
 }
