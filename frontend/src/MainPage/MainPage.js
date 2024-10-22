@@ -83,30 +83,30 @@ const MainPage = ({ token, isLoggedIn }) => {
         }
     };
 
-    // const handleEditHabit = async (habitId, updatedHabit) => {
-    //     try {
-    //         const response = await fetch(`http://localhost:2000/habits/${habitId}`, {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 Authorization: `Bearer ${token}`,
-    //             },
-    //             body: JSON.stringify(updatedHabit),
-    //         });
-    //         const data = await response.json();
-    //         if (response.ok) {
-    //             setHabits(prev =>
-    //                 prev.map(h =>
-    //                     h._id === habitId ? data : h
-    //                 )
-    //             );
-    //         } else {
-    //             console.error('Failed to edit habit:', data.error);
-    //         }
-    //     } catch (error) {
-    //         console.error('Failed to edit habit:', error);
-    //     }
-    // };
+    const handleEditHabit = async (habitId, updatedHabit) => {
+        try {
+            const response = await fetch(`http://localhost:2000/habits/${habitId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(updatedHabit),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setHabits(prev =>
+                    prev.map(h =>
+                        h._id === habitId ? data : h
+                    )
+                );
+            } else {
+                console.error('Failed to edit habit:', data.error);
+            }
+        } catch (error) {
+            console.error('Failed to edit habit:', error);
+        }
+    };
 
     const handleDeleteHabit = async (habitId) => {
         try {
@@ -227,7 +227,7 @@ const MainPage = ({ token, isLoggedIn }) => {
                 habits={habits.filter(habit => habit.frequencyDays.includes(selectedDate.getDay()))} 
                 selectedDate={selectedDate} 
                 handleToggleHabit={handleToggleHabit} 
-                // handleEditHabit={handleEditHabit}
+                handleEditHabit={handleEditHabit}
                 handleDeleteHabit={handleDeleteHabit}
             />
 

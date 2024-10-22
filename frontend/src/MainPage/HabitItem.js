@@ -1,8 +1,20 @@
 // HabitItem.js
-import React from 'react';
-
+import React, { useState } from 'react';
+import EditHabitPopup from './EditHabitPopup';
 
 const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, handleDeleteHabit }) => {
+    const [showEditHabitPopup, setShowEditHabitPopup] = useState(false);
+    const [updatedHabit, setUpdatedHabit] = useState(habit);
+
+    const resetHabitForm = () => {
+        setUpdatedHabit(habit);
+        setShowEditHabitPopup(false);
+    };
+
+    const toggleEditPopup = () => {
+        setShowEditHabitPopup(prev => !prev);
+    };
+
     return (
         <div 
             className="habit" 
@@ -25,13 +37,21 @@ const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, ha
                 <button className="stats-button">
                     <img className="button-icon" alt="Statistics" src="\bar-chart.png" />
                 </button>
-                <button className="edit-button" /*onClick={handleEditHabit(habit.id, habit)}> */>
-                    <img className = "button-icon" alt = "Edit" src = "\edit1.png" />
+                <button className="edit-button" onClick={toggleEditPopup}>
+                    <img className="button-icon" alt="Edit" src="\edit1.png" />
                 </button>
                 <button className="delete-button" onClick={() => handleDeleteHabit(habit._id)}>
-                    <img className = "button-icon" alt = "Delete" src = "\delete.png" />
+                    <img className="button-icon" alt="Delete" src="\delete.png" />
                 </button>
             </div>
+
+            {showEditHabitPopup && (
+                <EditHabitPopup 
+                    oldHabit={updatedHabit}
+                    handleEditHabit={handleEditHabit}
+                    resetHabitForm={resetHabitForm}
+                />
+            )}
         </div>
     );
 };
