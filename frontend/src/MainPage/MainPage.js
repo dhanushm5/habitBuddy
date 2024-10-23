@@ -6,7 +6,6 @@ import AddHabitPopup from './AddHabitPopup';
 import DateCarousel from './DateCarousel';
 import AvatarBuilder from './AvatarBuilder';
 import AvatarDisplay from './AvatarDisplay';
-import FaceApi from './FaceApi'; // Import your FaceApi component
 
 const MainPage = ({ token, isLoggedIn }) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -17,14 +16,13 @@ const MainPage = ({ token, isLoggedIn }) => {
     const [showAddHabitPopup, setShowAddHabitPopup] = useState(false);
     const [avatar, setAvatar] = useState({}); // State to store the avatar configuration
     const [editAvatar, setEditAvatar] = useState(false); // Control AvatarBuilder visibility
-    const [useFaceApi, setUseFaceApi] = useState(false); // State to control FaceApi.js rendering
 
     const navigate = useNavigate();
 
     useEffect(() => {
         if (isLoggedIn) {
             fetchHabits();
-            fetchAvatar(); // Fetch avatar when user logs in
+            
             fetchAvatar();
         } else {
             navigate("/login");
@@ -215,9 +213,6 @@ const MainPage = ({ token, isLoggedIn }) => {
                 <button onClick={() => setEditAvatar(!editAvatar)}>
                     {editAvatar ? 'Close Avatar Builder' : 'Edit Avatar'}
                 </button>
-                <button onClick={() => setUseFaceApi(!useFaceApi)}>
-                    {useFaceApi ? 'Close Face Avatar' : 'Generate Face Avatar'}
-                </button>
             </div>
 
             {/* Conditionally render AvatarBuilder */}
@@ -228,9 +223,6 @@ const MainPage = ({ token, isLoggedIn }) => {
                     token={token} // Pass token if needed for saving avatar
                 />
             )}
-
-            {/* Conditionally render FaceApi component */}
-            {useFaceApi && <FaceApi setAvatar={setAvatar} token={token} />} 
 
             <DateCarousel
                 
