@@ -16,6 +16,7 @@ const MainPage = ({ token, isLoggedIn }) => {
     const [showAddHabitPopup, setShowAddHabitPopup] = useState(false);
     const [avatar, setAvatar] = useState({}); // State to store the avatar configuration
     const [editAvatar, setEditAvatar] = useState(false); // Control AvatarBuilder visibility
+    const showAvatar = false;       // to toggle visibility of avatar
 
     const navigate = useNavigate();
 
@@ -202,18 +203,18 @@ const MainPage = ({ token, isLoggedIn }) => {
         <div className="main-page">
             <h1>Habit Tracker</h1>
 
-            {/* Avatar Section */}
-            {/* Avatar Section */}
-            <div className="avatar-section">
-                <h2>Your Avatar</h2>
-                {/* Display the current avatar */}
-                <AvatarDisplay avatar={avatar} />
+            {showAvatar && 
+                <div className="avatar-section">
+                    <h2>Your Avatar</h2>
+                    <AvatarDisplay avatar={avatar} />
 
-                {/* Toggle buttons for different avatar systems */}
-                <button onClick={() => setEditAvatar(!editAvatar)}>
-                    {editAvatar ? 'Close Avatar Builder' : 'Edit Avatar'}
-                </button>
-            </div>
+                    {/* Toggle buttons for different avatar systems */}
+                    <button onClick={() => setEditAvatar(!editAvatar)}>
+                        {editAvatar ? 'Close Avatar Builder' : 'Edit Avatar'}
+                    </button>
+                </div>
+            }
+            
 
             {/* Conditionally render AvatarBuilder */}
             {editAvatar && (

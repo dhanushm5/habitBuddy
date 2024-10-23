@@ -7,7 +7,7 @@ const Navbar = ({ isLoggedIn }) => {
     const links = isLoggedIn
         ? [
             { to: "/", label: "Home" },
-            { to: "/logout", label: "Logout" }
+            { to: "/logout", label: "Logout" }    // not going to /logout
           ] : [];
 
     return (
