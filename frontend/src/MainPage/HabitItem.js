@@ -1,20 +1,24 @@
 // HabitItem.js
-import React from 'react';
+import React, { useState } from 'react';
+import EditHabitPopup from './EditHabitPopup';
 
-const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleViewCalendar }) => {
-    const handleItemClick = () => {
-        if (handleViewCalendar) {
-            handleViewCalendar(habit); // Call the passed function when clicked
-        } else {
-            console.error('handleViewCalendar is not defined');
-        }
+const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, handleDeleteHabit }) => {
+    const [showEditHabitPopup, setShowEditHabitPopup] = useState(false);
+    const [updatedHabit, setUpdatedHabit] = useState(habit);
+
+    const resetHabitForm = () => {
+        setUpdatedHabit(habit);
+        setShowEditHabitPopup(false);
+    };
+
+    const toggleEditPopup = () => {
+        setShowEditHabitPopup(prev => !prev);
     };
 
     return (
         <div 
             className="habit" 
             style={{ backgroundColor: habit.color || '#4db6ac' }} 
-            onClick={handleItemClick} // Add onClick handler here
         >
             <div>
                 <input 
@@ -30,16 +34,24 @@ const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleViewCalendar 
 
             {/* Buttons for Statistics, Edit, Delete */}
             <div className="button-group">
-                <button className="stats-button" onClick={handleItemClick}>
+                <button className="stats-button">
                     <img className="button-icon" alt="Statistics" src="\bar-chart.png" />
                 </button>
-                <button className="edit-button">
+                <button className="edit-button" onClick={toggleEditPopup}>
                     <img className="button-icon" alt="Edit" src="\edit1.png" />
                 </button>
-                <button className="delete-button">
+                <button className="delete-button" onClick={() => handleDeleteHabit(habit._id)}>
                     <img className="button-icon" alt="Delete" src="\delete.png" />
                 </button>
             </div>
+
+            {showEditHabitPopup && (
+                <EditHabitPopup 
+                    oldHabit={updatedHabit}
+                    handleEditHabit={handleEditHabit}
+                    resetHabitForm={resetHabitForm}
+                />
+            )}
         </div>
     );
 };
