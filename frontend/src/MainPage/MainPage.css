@@ -33,13 +33,16 @@
     margin: 5px;
     font-size: 18px;
     padding: 10px 0;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
 }
 
 .selected {
     font-weight: bold;
-    /* color: #3eb489; */
     border-radius: 8px;
     width: 70px;
+    background-color: #4caf50; /* Highlight color for selected date */
+    color: white; /* Text color for selected date */
+    transform: scale(1.05); /* Slightly increase size for effect */
 }
 
 .habitlist {
@@ -92,18 +95,6 @@
     display: flex;
     align-items: center;
 }
-
-/* .color-picker {
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.color-picker input[type="color"] {
-    border: none;
-    cursor: pointer;
-} */
 
 .completed {
     text-decoration: line-through; /* Strikethrough effect */
@@ -263,7 +254,6 @@
 
 .addHabitContainer {
     margin-left: 28px;
-    
 }
 
 #addhabit {
