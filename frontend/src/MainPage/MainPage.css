@@ -37,7 +37,9 @@
 
 .selected {
     font-weight: bold;
-    color: #4db6ac;
+    /* color: #3eb489; */
+    border-radius: 8px;
+    width: 70px;
 }
 
 .habitlist {
