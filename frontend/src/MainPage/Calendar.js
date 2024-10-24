@@ -1,18 +1,15 @@
-// Calendar.js
 import React, { useState, useEffect } from 'react';
 import './Calendar.css';
 import { useLocation } from 'react-router-dom';
 
 const Calendar = () => {
     const { state } = useLocation();
-    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-    const [selectedDate, setSelectedDate] = useState(state ? new Date(state.selectedDate) : new Date());
-    const [habit] = useState(state ? state.habit : null); // Get the habit from state
+    const [currentDate, setCurrentDate] = useState(state ? new Date(state.selectedDate) : new Date());
+    const [habit] = useState(state ? state.habit : null);
 
     useEffect(() => {
         if (state && state.selectedDate) {
-            setSelectedDate(new Date(state.selectedDate));
+            setCurrentDate(new Date(state.selectedDate));
         }
     }, [state]);
 
@@ -22,26 +19,24 @@ const Calendar = () => {
 
     const generateCalendar = () => {
         const days = [];
-        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-        const totalDays = daysInMonth(currentMonth, currentYear);
+        const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
+        const totalDays = daysInMonth(currentDate.getMonth(), currentDate.getFullYear());
 
-        // Fill in empty slots for days before the first day of the month
         for (let i = 0; i < firstDay; i++) {
             days.push(<div className="day empty" key={`empty-${i}`}></div>);
         }
 
-        // Fill in days of the month
         for (let day = 1; day <= totalDays; day++) {
             days.push(
                 <div
-                    className={`day ${selectedDate.getDate() === day &&
-                        selectedDate.getMonth() === currentMonth &&
-                        selectedDate.getFullYear() === currentYear
+                    className={`day ${currentDate.getDate() === day &&
+                        currentDate.getMonth() === currentDate.getMonth() &&
+                        currentDate.getFullYear() === currentDate.getFullYear()
                         ? 'selected'
                         : ''
-                        }`}
+                    }`}
                     key={day}
-                    onClick={() => setSelectedDate(new Date(currentYear, currentMonth, day))}
+                    onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day))}
                 >
                     {day}
                 </div>
@@ -51,32 +46,22 @@ const Calendar = () => {
         return days;
     };
 
-    const changeMonth = (direction) => {
-        if (direction === 'next') {
-            if (currentMonth === 11) {
-                setCurrentMonth(0);
-                setCurrentYear(currentYear + 1);
-            } else {
-                setCurrentMonth(currentMonth + 1);
-            }
-        } else {
-            if (currentMonth === 0) {
-                setCurrentMonth(11);
-                setCurrentYear(currentYear - 1);
-            } else {
-                setCurrentMonth(currentMonth - 1);
-            }
-        }
+    const changeDay = (days) => {
+        const newDate = new Date(currentDate);
+        newDate.setDate(newDate.getDate() + days);
+        setCurrentDate(newDate);
     };
 
     return (
-        <div className="calendar">
+        <div className="calendar-container">
             <h1>{habit ? habit.name : 'Habit Calendar'}</h1>
-            <div className="calendar-header">
-                <button onClick={() => changeMonth('prev')}>Previous</button>
-                <h2>{`${currentYear} - ${currentMonth + 1}`}</h2>
-                <button onClick={() => changeMonth('next')}>Next</button>
+
+            <div className="calendar-navigation">
+                <button onClick={() => changeDay(-1)}>&lt;</button>
+                <span>{currentDate.toDateString()}</span>
+                <button onClick={() => changeDay(1)}>&gt;</button>
             </div>
+
             <div className="days">
                 {generateCalendar()}
             </div>
