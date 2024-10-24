@@ -57,7 +57,7 @@
     background-color: #4db6ac;
     border-radius: 8px;
     margin-bottom: 10px;
-    width: 100%; /* Full width */
+    width: 95%; /* Full width */
 }
 
 .habit span {
@@ -91,7 +91,7 @@
     align-items: center;
 }
 
-.color-picker {
+/* .color-picker {
     margin-top: 15px;
     display: flex;
     justify-content: space-between;
@@ -101,7 +101,7 @@
 .color-picker input[type="color"] {
     border: none;
     cursor: pointer;
-}
+} */
 
 .completed {
     text-decoration: line-through; /* Strikethrough effect */
@@ -237,4 +237,24 @@
 
 .avatar-section button:hover {
     background-color: #0056b3;
+}
+
+.color-swatches {
+    display: flex;
+    gap: 9px;
+    margin-top: 10px;
+    padding-bottom: 13px;
+    padding-left: 5px;
+}
+
+.color-swatch {
+    transition: transform 0.2s;
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+.button {
+    margin-bottom: 5px; 
 }

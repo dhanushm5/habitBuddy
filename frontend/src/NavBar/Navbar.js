@@ -7,25 +7,26 @@ const Navbar = ({ isLoggedIn }) => {
     const links = isLoggedIn
         ? [
             { to: "/", label: "Home" },
-            { to: "/logout", label: "Logout" }
-          ]
-        : [
-            { to: "/login", label: "Login" },
-            { to: "/register", label: "Register" }
-          ];
+            { to: "/logout", label: "Logout" }    // not going to /logout
+          ] : [];
 
     return (
-        <nav>
-            {links.map(link => (
-                <NavLink 
-                    key={link.to} 
-                    to={link.to} 
-                    activeClassName="active-link"
-                >
-                    {link.label}
-                </NavLink>
-            ))}
-        </nav>
+        <>
+            {isLoggedIn && (
+                <nav>
+                {links.map(link => (
+                    <NavLink 
+                        key={link.to} 
+                        to={link.to} 
+                        activeClassName="active-link"
+                    >
+                        {link.label}
+                    </NavLink>
+                ))}
+            </nav>
+            )}
+        
+    </>
     );
 };
 

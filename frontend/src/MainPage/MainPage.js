@@ -14,13 +14,16 @@ const MainPage = ({ token, isLoggedIn }) => {
     const [frequencyDays, setFrequencyDays] = useState([]);
     const [habitColor, setHabitColor] = useState('#4db6ac');
     const [showAddHabitPopup, setShowAddHabitPopup] = useState(false);
-    const [avatar, setAvatar] = useState({});
-    const [editAvatar, setEditAvatar] = useState(false);
+    const [avatar, setAvatar] = useState({}); // State to store the avatar configuration
+    const [editAvatar, setEditAvatar] = useState(false); // Control AvatarBuilder visibility
+    const showAvatar = false;       // to toggle visibility of avatar
+
     const navigate = useNavigate();
 
     useEffect(() => {
         if (isLoggedIn) {
             fetchHabits();
+            
             fetchAvatar();
         } else {
             navigate("/login");
@@ -200,26 +203,34 @@ const MainPage = ({ token, isLoggedIn }) => {
         <div className="main-page">
             <h1>Habit Tracker</h1>
 
-            {/* Avatar Section */}
-            <div className="avatar-section">
-                <h2>Your Avatar</h2>
-                <AvatarDisplay avatar={avatar} />
-                <button onClick={() => setEditAvatar(!editAvatar)}>
-                    {editAvatar ? 'Close Editor' : 'Edit Avatar'}
-                </button>
-            </div>
+            {showAvatar && 
+                <div className="avatar-section">
+                    <h2>Your Avatar</h2>
+                    <AvatarDisplay avatar={avatar} />
 
+                    {/* Toggle buttons for different avatar systems */}
+                    <button onClick={() => setEditAvatar(!editAvatar)}>
+                        {editAvatar ? 'Close Avatar Builder' : 'Edit Avatar'}
+                    </button>
+                </div>
+            }
+            
+
+            {/* Conditionally render AvatarBuilder */}
             {editAvatar && (
-                <AvatarBuilder 
-                    avatar={avatar} 
-                    setAvatar={setAvatar} 
-                    token={token} 
+                <AvatarBuilder
+                    avatar={avatar}
+                    setAvatar={setAvatar}
+                    token={token} // Pass token if needed for saving avatar
                 />
             )}
 
-            <DateCarousel 
-                selectedDate={selectedDate} 
-                changeDate={(days) => setSelectedDate(new Date(selectedDate.setDate(selectedDate.getDate() + days)))} 
+            <DateCarousel
+                
+                selectedDate={selectedDate}
+                
+                changeDate={(days) => setSelectedDate(new Date(selectedDate.setDate(selectedDate.getDate() + days)))}
+            
             />
 
             <h2>Habits for {selectedDate.toLocaleDateString('en-GB')}</h2>
@@ -234,11 +245,15 @@ const MainPage = ({ token, isLoggedIn }) => {
             <button id="addhabit" onClick={() => setShowAddHabitPopup(true)}>Add Habit</button>
 
             {showAddHabitPopup && (
-                <AddHabitPopup 
+                <AddHabitPopup
                     newHabit={newHabit}
                     setNewHabit={setNewHabit}
                     frequencyDays={frequencyDays}
-                    handleFrequencyChange={(day) => setFrequencyDays(frequencyDays.includes(day) ? frequencyDays.filter(d => d !== day) : [...frequencyDays, day])}
+                    handleFrequencyChange={(day) =>
+                        setFrequencyDays(frequencyDays.includes(day)
+                            ? frequencyDays.filter(d => d !== day)
+                            : [...frequencyDays, day])
+                    }
                     habitColor={habitColor}
                     setHabitColor={setHabitColor}
                     handleAddHabit={handleAddHabit}
