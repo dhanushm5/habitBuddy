@@ -3,7 +3,7 @@
     display: flex;
     width: 100%;
     height: 100vh;
-    background-color: #f9f9f9;
+    background-color: #efe9f4ff;
   }
   
   /* Left side - image section */
@@ -25,7 +25,7 @@
     justify-content: center;
     align-items: center;
     padding: 40px;
-    background-color: white;
+    background-color: #efe9f4ff;
     border-left: 1px solid #eee;
   }
   
@@ -65,21 +65,15 @@
   }
   
   /* Login button */
-  /* button.login-btn {
+  button.login-btn {
     width: 100%;
     padding: 12px;
-    background-color: #5865F2;
-    color: white;
     border: none;
     border-radius: 5px;
     font-size: 18px;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
-  
-  button.login-btn:hover {
-    background-color: #404EED;
-  } */
   
   /* Forgot password link */
   .forgot-password {

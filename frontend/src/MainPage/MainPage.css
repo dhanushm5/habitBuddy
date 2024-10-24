@@ -258,3 +258,14 @@
 .button {
     margin-bottom: 5px; 
 }
+
+.addHabitContainer {
+    margin-left: 28px;
+    
+}
+
+#addhabit {
+    width: 100px;
+    height: 30px;
+    border-radius: 8px;
+}

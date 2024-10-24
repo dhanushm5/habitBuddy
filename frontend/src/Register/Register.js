@@ -1,7 +1,6 @@
-// src/components/Register.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Register.css'; // Optional: for styling
+import './Register.css'; // Assuming you have styling for the register page
 
 const Register = ({ setToken }) => {
   const [email, setEmail] = useState('');
@@ -25,8 +24,10 @@ const Register = ({ setToken }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }), 
+      body: JSON.stringify({ email, password }),
     });
+
+    const data = await response.json();
 
     if (response.ok) {
       setSuccess('Registration successful! You can now log in.');
@@ -36,46 +37,68 @@ const Register = ({ setToken }) => {
       setError('');
       navigate('/login');
     } else {
-      const errorData = await response.json();
-      setError(errorData.error || 'Registration failed');
+      setError(data.error || 'Registration failed');
     }
   };
 
   return (
     <div className="register-container">
-      <h2>Register</h2>
-      {error && <p className="error">{error}</p>}
-      {success && <p className="success">{success}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      {/* Left side: Image section */}
+      <div className="register-left">
+        <img src={process.env.PUBLIC_URL + '/register-pic-blue.png'} alt="Register visual" className="register-image" />
+      </div>
+
+      {/* Right side: Registration form */}
+      <div className="register-right">
+        <div className="register-logo">
+          <h2>Register</h2>
         </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+
+        <form onSubmit={handleSubmit} className="register-form">
+          <div className="form-group">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Error and Success messages */}
+          {error && <div className="error">{error}</div>}
+          {success && <div className="success">{success}</div>}
+
+          {/* Register button */}
+          <button type="submit" className="register-btn">
+            Register
+          </button>
+        </form>
+
+        {/* Login link */}
+        <div className="login-link">
+          <span>Already have an account? </span>
+          <a href="/login">Login here</a>
         </div>
-        <div>
-          <label>Confirm Password:</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Register</button>
-      </form>
+      </div>
     </div>
   );
 };
