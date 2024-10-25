@@ -1,79 +1,72 @@
-/* Calendar.css */
-.calendar {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+/* Calendar container */
+.calendar-container {
+    background-color: #ffffff; /* White background for contrast */
+    border-radius: 15px; /* Soft corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    padding: 20px; /* Padding around the content */
+    max-width: 400px; /* Set a max width for the calendar */
+    margin-right: 20px; /* Space between the calendar and other content */
+    float: left; /* Align the calendar to the left */
+}
+
+/* Calendar navigation buttons */
+.calendar-navigation {
+    margin: 10px 0;
+    display: flex;
+    justify-content: space-between; /* Space buttons evenly */
+}
+
+.calendar-navigation button {
     padding: 10px;
-    width: 300px;
-    margin: 20px auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    background-color: white; /* Background for the calendar */
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header button {
-    background-color: #4db6ac;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
+    margin: 0 5px;
     cursor: pointer;
+    background-color: #ff6f61; /* Colorful button background */
+    border: none;
+    color: white;
+    width: 20%;
+    border-radius: 5px;
+    font-size: 20px;
 }
 
-.header button:hover {
-    background-color: #45a049;
-}
-
-.days-of-week {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
+/* Days grid in the calendar */
 .days {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+    grid-template-columns: repeat(7, 1fr); /* Create 7 columns for each day of the week */
+    gap: 8px; /* Space between days */
 }
 
+/* Individual day in the calendar */
 .day {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 5px;
+    padding: 10px;
+    background-color: #e0f7fa; /* Light blue background for days */
+    border: 3px solid #b2ebf2; /* Border color */
     cursor: pointer;
-    transition: background-color 0.3s;
+    text-align: center;
+    width: 50%;
+    transition: all 0.3s ease; /* Smooth transition for hover and selection */
 }
 
-.day:hover {
-    background-color: #e0f7fa;
-}
-
-.selected {
-    background-color: #4db6ac;
+/* Selected day styling */
+.day.selected {
+    background-color: #4caf50; /* Green background for selected day */
     color: white;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.7); /* Green glow effect */
+    transition: box-shadow 0.3s ease; /* Smooth transition for the glow */
 }
 
-.empty {
-    background-color: transparent;
+/* Empty day slots (for days that don't belong to the current month) */
+.day.empty {
+    visibility: hidden; /* Hide empty slots */
 }
 
-/* Styles for the calendar popup */
-.calendar-popup {
-    position: absolute;
-    z-index: 10;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 70px; /* Adjust based on your layout */
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+/* Hover effect for days */
+.day:hover {
+    background-color: #b2ebf2; /* Light blue on hover */
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.7); /* Light blue glow on hover */
+}
+
+/* Styling for date text */
+span {
+    font-size: 18px;
+    font-weight: bold;
 }

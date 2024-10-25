@@ -1,11 +1,25 @@
+:root {
+    --background-color: #efe9f4ff; 
+    --button-background: #3eb489; /* mint */
+    --checkbox-background: #dadcdc; /* Default unchecked background */
+    --checkbox-checked-background: var(--button-background); /* Checked background */
+    --checkbox-hover-background: #bbb; /* Hover background */
+}
 .main-page {
-    padding: 20px;
     font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: var(--background-color);
 }
 
 .carousel {
     display: flex;
+    width: 80%;
     align-items: center;
+    justify-content: space-evenly;
     padding: 5px;
 }
 
@@ -33,11 +47,16 @@
     margin: 5px;
     font-size: 18px;
     padding: 10px 0;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
 }
 
 .selected {
     font-weight: bold;
-    color: #4db6ac;
+    border-radius: 8px;
+    width: 70px;
+    background-color: var(--button-background); /* Highlight color for selected date */
+    color: white; /* Text color for selected date */
+    transform: scale(1.05); /* Slightly increase size for effect */
 }
 
 .habitlist {
@@ -45,19 +64,19 @@
     flex-direction: column;
     align-items: center;
     padding: 10px;
-    width: 100%; /* Full width for the habit container */
+    width: 80%; 
 }
 
 .habit {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-direction: row;
+    /* flex-direction: row; */
     padding: 10px;
     background-color: #4db6ac;
     border-radius: 8px;
     margin-bottom: 10px;
-    width: 95%; /* Full width */
+    width: 95%; 
 }
 
 .habit span {
@@ -90,18 +109,6 @@
     display: flex;
     align-items: center;
 }
-
-/* .color-picker {
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.color-picker input[type="color"] {
-    border: none;
-    cursor: pointer;
-} */
 
 .completed {
     text-decoration: line-through; /* Strikethrough effect */
@@ -258,3 +265,87 @@
 .button {
     margin-bottom: 5px; 
 }
+
+.addHabitContainer {
+    /* margin-left: 28px; */
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    width: 95%;
+}
+
+#addhabit {
+    width: 100px;
+    height: 40px;
+    /* background-color: #53dd6c;
+    color: white; */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+/* Hide the default checkbox */
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create the custom checkbox */
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.custom-checkbox .checkmark {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-color: var(--checkbox-background); /* Default unchecked background */
+    border-radius: 4px; /* Rounded corners */
+    margin-right: 10px; /* Space between checkbox and label */
+    transition: background-color 0.3s, box-shadow 0.2s;
+    position: relative;
+}
+
+/* The checkmark when the checkbox is checked */
+.custom-checkbox input:checked + .checkmark {
+    background-color: var(--checkbox-checked-background); /* Checked background */
+    box-shadow: 0 0 5px var(--checkbox-checked-background); /* Optional glow effect */
+}
+
+/* Add a tick (or any symbol) inside the box when checked */
+.custom-checkbox .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+/* Show the checkmark tick when checked */
+.custom-checkbox input:checked + .checkmark::after {
+    display: block;
+}
+
+/* Add a hover effect */
+.custom-checkbox:hover .checkmark {
+    background-color: var(--checkbox-hover-background);
+}
+
+.custom-checkbox .checkmark {
+    transition: all 0.2s ease; /* Smooth animation */
+}
+
+.custom-checkbox input:checked + .checkmark {
+    transform: scale(1.1); /* Slightly enlarge the box when checked */
+}
+

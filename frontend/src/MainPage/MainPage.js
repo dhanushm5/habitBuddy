@@ -242,7 +242,9 @@ const MainPage = ({ token, isLoggedIn }) => {
                 handleDeleteHabit={handleDeleteHabit}
             />
 
-            <button id="addhabit" onClick={() => setShowAddHabitPopup(true)}>Add Habit</button>
+            <div class = "addHabitContainer">
+                <button id="addhabit" onClick={() => setShowAddHabitPopup(true)}>Add Habit</button>
+            </div>
 
             {showAddHabitPopup && (
                 <AddHabitPopup

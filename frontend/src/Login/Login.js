@@ -1,7 +1,6 @@
-// src/components/Login.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Login.css"; // You can create a CSS file to style the login page.
+import "./Login.css"; 
 
 const Login = ({ setToken, setIsLoggedIn }) => {
   const [email, setEmail] = useState("");
@@ -12,62 +11,83 @@ const Login = ({ setToken, setIsLoggedIn }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    // Make sure to match this with your backend's login API
     const response = await fetch('http://localhost:2000/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }), // Match with your backend
+      body: JSON.stringify({ email, password }),
     });
 
     const data = await response.json();
-    
+
     if (response.ok) {
-      setToken(data.token);
-      localStorage.setItem('token', data.token);
-      setIsLoggedIn(true);
-      navigate("/"); // Redirect to the main page
+      setToken(data.token); // Save the token in state
+      localStorage.setItem('token', data.token); // Save token in local storage
+      setIsLoggedIn(true); // Set user as logged in
+      navigate("/"); // Redirect to home page
     } else {
-      setError(data.error || 'Invalid email or password');
+      setError(data.error || 'Invalid email or password'); // Show error if login fails
     }
   };
 
   return (
     <div className="login-container">
-      <h2>Login to Habit Tracker</h2>
-      <form onSubmit={handleLogin}>
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      {/* Left side: Image section */}
+      <div className="login-left">
+        <img src={process.env.PUBLIC_URL + '/login-pic-green.png'} alt="Login visual" className="login-image" />
+      </div>
+
+      {/* Right side: Login form */}
+      <div className="login-right">
+        <div className="login-logo">
+          <h2>Login</h2>
         </div>
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+
+        <form onSubmit={handleLogin} className="login-form">
+          <div className="form-group">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Error message */}
+          {error && <div className="error">{error}</div>}
+
+          {/* Login button */}
+          <button type="submit" className="login-btn">
+            Login
+          </button>
+        </form>
+
+        {/* Forgot password link */}
+        <div className="forgot-password">
+          <a href="/forgot-password">Forgot Password?</a>
         </div>
-        {error && <div className="error">{error}</div>}
-        <button type="submit">Login</button>
-      </form>
-      <div className="login-footer">
-        <p>
-          Don't have an account? <a href="/register">Register here</a>
-        </p>
-        <p>
-          <a href="/forgot-password">Forgot password?</a>
-        </p>
+
+        {/* Register link */}
+        <div className="register">
+          <span>Don't have an account? </span>
+          <a href="/register">Register here</a>
+          
+        </div>
       </div>
     </div>
   );
 };
 
 export default Login;
-
