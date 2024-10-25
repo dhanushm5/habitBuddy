@@ -27,15 +27,16 @@ const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, ha
             className="habit" 
             style={{ backgroundColor: habit.color || '#4db6ac' }} 
         >
-            <label className = "custom-checkbox">
-                <input 
-                    type="checkbox"
-                    checked={habit.completedDates.includes(selectedDate.toISOString().split('T')[0])}
-                    onChange={() => handleToggleHabit(habit)}
-                />
-                <span className = "checkmark"></span>
+            <div>
                 
-            </label>
+                    <input className = "custom-checkbox"
+                        type="checkbox"
+                        checked={habit.completedDates.includes(selectedDate.toISOString().split('T')[0])}
+                        onChange={() => handleToggleHabit(habit)}
+                    />
+                    <span className = "checkmark"></span>
+            </div>
+            
 
             <span className={habit.completedDates.includes(selectedDate.toISOString().split('T')[0]) ? 'completed' : ''}>
                 {habit.name}
@@ -57,7 +58,10 @@ const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, ha
             {showEditHabitPopup && (
                 <EditHabitPopup 
                     oldHabit={updatedHabit}
+                    setUpdatedHabit={setUpdatedHabit}
+                    setShowEditHabitPopup={setShowEditHabitPopup}
                     handleEditHabit={handleEditHabit}
+                    toggleEditPopup={toggleEditPopup}
                     resetHabitForm={resetHabitForm}
                 />
             )}

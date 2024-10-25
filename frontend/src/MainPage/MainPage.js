@@ -120,7 +120,7 @@ const MainPage = ({ token, isLoggedIn }) => {
                 },
             });
             if (response.ok) {
-                // setHabits(prev => prev.filter(h => h._id !== habitId));
+                setHabits(prev => prev.filter(h => h._id !== habitId));
                 fetchHabits();
             } else {
                 console.error('Failed to delete habit:', await response.json());
