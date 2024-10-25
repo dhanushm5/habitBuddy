@@ -28,7 +28,7 @@ const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm, setShowEdit
     const handleColorChange = (color) => {
         setHabit(prevHabit => ({
             ...prevHabit,
-            color: color // Assuming `habit.color` is the property that stores the color
+            color: color 
         }));
     };
 
@@ -68,6 +68,15 @@ const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm, setShowEdit
                         {day}
                     </label>
                 ))}
+            </div>
+            <div className="reminder-box">
+                <label>Set Reminder: </label>
+                <input
+                    type="time"
+                    placeholder={habit.reminderTime || 'HH:MM'}
+                    value={habit.reminderTime}
+                    onChange={(e) => setHabit({ ...habit, reminderTime: e.target.value })}
+                />
             </div>
             <div className="color-picker">
                 <label>Select Habit Color: </label>

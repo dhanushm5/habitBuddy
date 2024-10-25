@@ -1,12 +1,29 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-const AddHabitPopup = ({ newHabit, setNewHabit, frequencyDays, handleFrequencyChange, habitColor, setHabitColor, handleAddHabit, resetHabitForm }) => {
+
+const AddHabitPopup = ({ habitName, setHabitName, frequencyDays, handleFrequencyChange, reminderTime, setReminderTime, habitColor, setHabitColor, handleAddHabit, resetHabitForm }) => {
     // Define an array of pastel colors
     const pastelColors = [
         '#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF',
         '#E6E6FA', '#FFD1DC', '#E0BBE4', '#FF9AA2', '#FFB7B2',
         '#B5EAD7', '#C7CEEA'
     ];
+    const [error, setError] = useState('');
+
+    const handleAddClick = () => {
+        if (!habitName) {
+            console.error('Habit name cannot be empty');
+            setError('Habit name cannot be empty');
+            return;
+        }
+        if (frequencyDays.length === 0) {
+            console.error('Habit frequency cannot be zero');
+            setError('Habit frequency cannot be zero');
+            return;
+        }
+        handleAddHabit();
+        resetHabitForm();
+    }
 
     return (
         <div className="popup">
@@ -14,8 +31,8 @@ const AddHabitPopup = ({ newHabit, setNewHabit, frequencyDays, handleFrequencyCh
             <input
                 type="text"
                 placeholder="Add Habit"
-                value={newHabit}
-                onChange={(e) => setNewHabit(e.target.value)}
+                value={habitName}
+                onChange={(e) => setHabitName(e.target.value)}
             />
             <div className="frequency-selector">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
@@ -28,6 +45,15 @@ const AddHabitPopup = ({ newHabit, setNewHabit, frequencyDays, handleFrequencyCh
                         {day}
                     </label>
                 ))}
+            </div>
+            <div className="reminder-box">
+                <label>Set Reminder: </label>
+                <input
+                    type="time"
+                    placeholder='HH:MM'
+                    value={reminderTime}
+                    onChange={(e) => setReminderTime(e.target.value)}
+                />
             </div>
             <div className="color-picker">
                 <label>Select Habit Color: </label>
@@ -49,8 +75,9 @@ const AddHabitPopup = ({ newHabit, setNewHabit, frequencyDays, handleFrequencyCh
                     ))}
                 </div>
             </div>
-            <button class = "button" onClick={handleAddHabit}>Add Habit</button>
+            <button class = "button" onClick={handleAddClick}>Add Habit</button>
             <button onClick={resetHabitForm}>Cancel</button>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
 };
