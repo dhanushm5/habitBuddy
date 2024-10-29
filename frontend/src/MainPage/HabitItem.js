@@ -58,7 +58,10 @@ const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, ha
             {showEditHabitPopup && (
                 <EditHabitPopup 
                     oldHabit={updatedHabit}
+                    setUpdatedHabit={setUpdatedHabit}
+                    setShowEditHabitPopup={setShowEditHabitPopup}
                     handleEditHabit={handleEditHabit}
+                    toggleEditPopup={toggleEditPopup}
                     resetHabitForm={resetHabitForm}
                 />
             )}

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm }) => {
+const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm, setShowEditHabitPopup, setUpdatedHabit }) => {
     const [habit, setHabit] = useState(oldHabit);
+    const [error, setError] = useState('');
 
     // Update local state when `oldHabit` changes
     useEffect(() => {
@@ -27,9 +28,25 @@ const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm }) => {
     const handleColorChange = (color) => {
         setHabit(prevHabit => ({
             ...prevHabit,
-            color: color // Assuming `habit.color` is the property that stores the color
+            color: color 
         }));
     };
+
+    const handleEditClick = () => {
+        if (!habit.name) {
+            console.error('Habit name cannot be empty');
+            setError('Habit name cannot be empty');
+            return;
+        }
+        if (habit.frequencyDays.length === 0) {
+            console.error('Habit frequency cannot be zero');
+            setError('Habit frequency cannot be zero');
+            return;
+        }
+        handleEditHabit(habit._id, habit);
+        setUpdatedHabit(habit);
+        setShowEditHabitPopup(false);
+    }
 
     return (
         <div className="popup">
@@ -54,6 +71,15 @@ const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm }) => {
                     </label>
                 ))}
             </div>
+            <div className="reminder-box">
+                <label>Set Reminder: </label>
+                <input
+                    type="time"
+                    placeholder={habit.reminderTime || 'HH:MM'}
+                    value={habit.reminderTime}
+                    onChange={(e) => setHabit({ ...habit, reminderTime: e.target.value })}
+                />
+            </div>
             <div className="color-picker">
                 <label>Select Habit Color: </label>
                 <div className="color-swatches">
@@ -74,8 +100,9 @@ const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm }) => {
                     ))}
                 </div>
             </div>
-            <button class = "button" onClick={() => handleEditHabit(habit._id, habit)}>Edit Habit</button>
+            <button class = "button" onClick={handleEditClick}>Save</button>
             <button onClick={resetHabitForm}>Cancel</button>
+            {error && <div className="error">{error}</div>}
         </div>
     );
 };

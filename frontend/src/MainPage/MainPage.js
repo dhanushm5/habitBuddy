@@ -10,10 +10,11 @@ import AvatarDisplay from './AvatarDisplay';
 const MainPage = ({ token, isLoggedIn }) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [habits, setHabits] = useState([]);
-    const [newHabit, setNewHabit] = useState('');
+    const [newHabitName, setNewHabitName] = useState('');
     const [frequencyDays, setFrequencyDays] = useState([]);
-    const [habitColor, setHabitColor] = useState('#4db6ac');
+    const [habitColor, setHabitColor] = useState('#C7CEEA');
     const [showAddHabitPopup, setShowAddHabitPopup] = useState(false);
+    const [reminderTime, setReminderTime] = useState('');
     const [avatar, setAvatar] = useState({}); // State to store the avatar configuration
     const [editAvatar, setEditAvatar] = useState(false); // Control AvatarBuilder visibility
     const showAvatar = false;       // to toggle visibility of avatar
@@ -61,8 +62,11 @@ const MainPage = ({ token, isLoggedIn }) => {
     };
 
     const handleAddHabit = async () => {
-        if (newHabit && frequencyDays.length > 0) {
-            const habit = { name: newHabit, frequencyDays, color: habitColor, startDate: new Date().toISOString().split('T')[0] };
+        if (newHabitName && frequencyDays.length > 0) {
+            const habit = { name: newHabitName, frequencyDays, color: habitColor, startDate: new Date().toISOString().split('T')[0] };
+            if (reminderTime) {
+                habit.reminderTime = reminderTime;
+            }
             try {
                 const response = await fetch('http://localhost:2000/habits', {
                     method: 'POST',
@@ -120,7 +124,7 @@ const MainPage = ({ token, isLoggedIn }) => {
                 },
             });
             if (response.ok) {
-                // setHabits(prev => prev.filter(h => h._id !== habitId));
+                setHabits(prev => prev.filter(h => h._id !== habitId));
                 fetchHabits();
             } else {
                 console.error('Failed to delete habit:', await response.json());
@@ -189,7 +193,7 @@ const MainPage = ({ token, isLoggedIn }) => {
     };
 
     const resetHabitForm = () => {
-        setNewHabit('');
+        setNewHabitName('');
         setFrequencyDays([]);
         setHabitColor('#4db6ac');
         setShowAddHabitPopup(false);
@@ -248,14 +252,16 @@ const MainPage = ({ token, isLoggedIn }) => {
 
             {showAddHabitPopup && (
                 <AddHabitPopup
-                    newHabit={newHabit}
-                    setNewHabit={setNewHabit}
+                    habitName={newHabitName}
+                    setHabitName={setNewHabitName}
                     frequencyDays={frequencyDays}
                     handleFrequencyChange={(day) =>
                         setFrequencyDays(frequencyDays.includes(day)
                             ? frequencyDays.filter(d => d !== day)
                             : [...frequencyDays, day])
                     }
+                    reminderTime={reminderTime}
+                    setReminderTime={setReminderTime}
                     habitColor={habitColor}
                     setHabitColor={setHabitColor}
                     handleAddHabit={handleAddHabit}
