@@ -11,21 +11,23 @@ const AddHabitPopup = ({ newHabit, setNewHabit, frequencyDays, handleFrequencyCh
     return (
         <div className="popup">
             <h3>Add New Habit</h3>
-            <input
-                type="text"
-                placeholder="Add Habit"
-                value={newHabit}
-                onChange={(e) => setNewHabit(e.target.value)}
-            />
+            <div className = "habit-textbox">    
+                <input
+                    type="text"
+                    placeholder="Add Habit"
+                    value={newHabit}
+                    onChange={(e) => setNewHabit(e.target.value)}
+                />
+            </div>
             <div className="frequency-selector">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
                     <label key={index}>
+                        {day}
                         <input
                             type="checkbox"
                             checked={frequencyDays.includes(index)}
                             onChange={() => handleFrequencyChange(index)}
                         />
-                        {day}
                     </label>
                 ))}
             </div>

@@ -36,7 +36,7 @@ const Login = ({ setToken, setIsLoggedIn }) => {
     <div className="login-container">
       {/* Left side: Image section */}
       <div className="login-left">
-        <img src={process.env.PUBLIC_URL + '/login-pic-green.png'} alt="Login visual" className="login-image" />
+        <img src={process.env.PUBLIC_URL + '/login-pic-green-compress.jpg'} alt="Login visual" className="login-image" loading = "lazy" />
       </div>
 
       {/* Right side: Login form */}

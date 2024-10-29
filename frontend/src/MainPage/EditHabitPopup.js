@@ -34,21 +34,23 @@ const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm }) => {
     return (
         <div className="popup">
             <h3>Edit Habit</h3>
-            <input
-                type="text"
-                placeholder="Edit Habit"
-                value={habit.name || ''}  // Fallback for undefined habit name
-                onChange={(e) => setHabit({ ...habit, name: e.target.value })}
-            />
+            <div className = "habit-textbox">
+                <input
+                    type="text"
+                    placeholder="Edit Habit"
+                    value={habit.name || ''}  // Fallback for undefined habit name
+                    onChange={(e) => setHabit({ ...habit, name: e.target.value })}
+                />
+            </div>
             <div className="frequency-selector">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
                     <label key={index}>
+                        {day}
                         <input
                             type="checkbox"
                             checked={habit.frequencyDays.includes(index)}
                             onChange={() => handleFrequencyChange(index)}
                         />
-                        {day}
                     </label>
                 ))}
             </div>
