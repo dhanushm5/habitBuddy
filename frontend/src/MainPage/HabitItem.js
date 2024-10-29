@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import EditHabitPopup from './EditHabitPopup';
 
-const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, handleDeleteHabit }) => {
+const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, handleDeleteHabit, handleViewCalendar, handleViewStatistics }) => {
     const [showEditHabitPopup, setShowEditHabitPopup] = useState(false);
     const [updatedHabit, setUpdatedHabit] = useState(habit);
     const navigate = useNavigate(); // Initialize navigate
@@ -17,11 +17,7 @@ const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, ha
         setShowEditHabitPopup(prev => !prev);
     };
 
-    // Function to handle navigating to the calendar page
-    const handleViewCalendar = () => {
-        navigate('/calendar', { state: { habit, selectedDate } }); // Pass habit and selectedDate as state
-    };
-
+    
     return (
         <div 
             className="habit" 
@@ -44,7 +40,7 @@ const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, ha
 
             {/* Buttons for Statistics, Edit, Delete */}
             <div className="button-group">
-                <button className="stats-button" onClick={handleViewCalendar}> {/* Update onClick handler */}
+                <button className="stats-button" onClick={handleViewStatistics}> {/* Update onClick handler */}
                     <img className="button-icon" alt="Statistics" src="\bar-chart.png" />
                 </button>
                 <button className="edit-button" onClick={toggleEditPopup}>
