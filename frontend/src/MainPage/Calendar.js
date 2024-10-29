@@ -46,9 +46,9 @@ const Calendar = () => {
         return days;
     };
 
-    const changeDay = (days) => {
+    const changeMonth = (month) => {
         const newDate = new Date(currentDate);
-        newDate.setDate(newDate.getDate() + days);
+        newDate.setMonth(newDate.getMonth() + month);
         setCurrentDate(newDate);
     };
 
@@ -57,9 +57,9 @@ const Calendar = () => {
             <h1>{habit ? habit.name : 'Habit Calendar'}</h1>
 
             <div className="calendar-navigation">
-                <button onClick={() => changeDay(-1)}>&lt;</button>
-                <span>{currentDate.toDateString()}</span>
-                <button onClick={() => changeDay(1)}>&gt;</button>
+                <button onClick={() => changeMonth(-1)}>&lt;</button>
+                <span>{currentDate.toDateString().split(" ")[1] + " " + currentDate.toDateString().split(" ")[3]}</span>
+                <button onClick={() => changeMonth(1)}>&gt;</button>
             </div>
 
             <div className="days">

@@ -203,6 +203,10 @@ const MainPage = ({ token, isLoggedIn }) => {
         navigate('/calendar', { state: { habit, selectedDate } }); // Navigate with selected habit and date
     };
 
+    const handleViewStatistics = (habit) => {
+        navigate('/stats', { state: habit._id}); // Navigate with habit id
+    };
+
     return (
         <div className="main-page">
             <h1>Habit Tracker</h1>
@@ -244,6 +248,8 @@ const MainPage = ({ token, isLoggedIn }) => {
                 handleToggleHabit={handleToggleHabit} 
                 handleEditHabit={handleEditHabit}
                 handleDeleteHabit={handleDeleteHabit}
+                handleViewCalendar={handleViewCalendar}
+                handleViewStatistics={handleViewStatistics}
             />
 
             <div class = "addHabitContainer">
