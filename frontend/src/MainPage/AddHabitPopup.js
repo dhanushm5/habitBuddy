@@ -55,7 +55,7 @@ const AddHabitPopup = ({
             <div className="frequency-selector">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
                     <label key={index}>
-                        {day}
+                        <span>{day}</span>
                         <input
                             type="checkbox"
                             checked={frequencyDays.includes(index)}

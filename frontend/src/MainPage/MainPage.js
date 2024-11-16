@@ -207,7 +207,7 @@ const MainPage = ({ token, isLoggedIn }) => {
 
     return (
         <div className="main-page">
-            <h1>Habit Tracker</h1>
+            <h1>Habit Buddy</h1>
 
             {showAvatar && 
                 <div className="avatar-section">
