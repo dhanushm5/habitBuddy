@@ -23,11 +23,15 @@ const AddHabitPopup = ({
 
     const handleAddClick = () => {
         if (!habitName) {
-            setError('Habit name cannot be empty');
+            setError('Pick a name for your habit!');
             return;
         }
         if (frequencyDays.length === 0) {
-            setError('Habit frequency cannot be zero');
+            setError('Pick some days for your habit!');
+            return;
+        }
+        if (!habitColor) {
+            setError('Pick a color!');
             return;
         }
         handleAddHabit();
@@ -81,20 +85,22 @@ const AddHabitPopup = ({
                             className="color-swatch"
                             style={{
                                 backgroundColor: color,
-                                width: '30px',
-                                height: '30px',
+                                width: habitColor === color ? '33px' : '30px',
+                                height: habitColor === color ? '33px' : '30px',
                                 borderRadius: '50%',
                                 cursor: 'pointer',
-                                border: habitColor === color ? '2px solid black' : '1px solid gray',
+                                border: habitColor === color ? '3px solid black' : '1px solid gray',
                             }}
                             onClick={() => setHabitColor(color)}
                         />
                     ))}
                 </div>
             </div>
-            <button class = "popup-button" onClick={handleAddClick}>Add Habit</button>
-            <button class = "popup-button" onClick={resetHabitForm}>Cancel</button>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className = "error" style = {{color: 'red', 
+                textAlign: 'left', paddingLeft: '5px', 
+                fontSize: '20px', fontWeight: 'bold'}}>{error}</p>}
+            <button className = "popup-button" onClick={handleAddClick}>Add Habit</button>
+            <button className = "popup-button" onClick={resetHabitForm}>Cancel</button>
         </div>
     );
 };

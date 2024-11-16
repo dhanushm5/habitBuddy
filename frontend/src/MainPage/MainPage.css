@@ -2,19 +2,17 @@
     /* Global CSS Variables */
     --background-color: #efe9f4ff; /* Magnolia */
     --button-background: #3eb489; /* Mint */
-    --checkbox-background: #dadcdc; /* Default unchecked background */
-    --checkbox-checked-background: var(--button-background); /* Checked background */
+    --checkbox-background: #dadcdc; 
+    --checkbox-checked-background: var(--button-background); 
     --checkbox-checked-hover-background: #3eae85c0;
-    --checkbox-hover-background: #bbbbbb72; /* Hover background */
+    --checkbox-hover-background: #bbbbbb72; 
     --font-family: 'Arial, sans-serif';
-    --font-size: 16px;
+    --font-size: 20px;
     --font-weight-normal: 400;
     --font-weight-bold: 700;
+    --border-radius-medium: 8px
 }
 
-/* === General Styling === */
-
-/* Body Styling */
 body {
     background-color: var(--background-color);
     font-family: var(--font-family);
@@ -37,108 +35,57 @@ input:focus-visible {
 }
 
 input[type="checkbox"] {
-    appearance: none; /* Removes default browser styles */
-    width: 16px; /* Size of the checkbox */
+    appearance: none;       /* Removes default browser styles */
+    width: 16px; 
     height: 16px;
-    border: 2px solid var(--checkbox-background); /* Border color */
-    border-radius: 4px; /* Slightly rounded corners for modern look */
-    background-color: var(--checkbox-background); /* Default background */
-    cursor: pointer; /* Pointer cursor for interactivity */
-    transition: all 0.2s ease; /* Smooth transition for hover and checked states */
-    position: relative; /* Necessary for positioning ::after inside the checkbox */
+    border: 2px solid var(--checkbox-background); 
+    border-radius: 4px;
+    background-color: var(--checkbox-background); 
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+    position: relative; 
 }
 
-/* Pseudo-element for the checkmark */
+/* Checkbox */
+
 input[type="checkbox"]::after {
-    content: ""; /* Empty content to create the checkmark */
+    content: ""; 
     position: absolute;
-    top: 50%; /* Center vertically within the checkbox */
-    left: 50%; /* Center horizontally within the checkbox */
-    width: 10px; /* Width of the checkmark */
-    height: 6px; /* Height of the checkmark */
-    border: solid var(--background-color); /* Color matches checked background */
+    top: 50%; 
+    left: 50%; 
+    width: 10px; 
+    height: 6px; 
+    border: solid var(--background-color); 
     border-width: 0 0 4px 4px; /* Creates the checkmark shape */
     transform: translate(-50%, -50%) rotate(-45deg); /* Center and rotate the checkmark */
     opacity: 0; /* Hidden by default */
-    transition: opacity 0.2s ease; /* Smooth fade-in */
+    transition: opacity 0.2s ease; 
 }
 
-/* Checked state */
 input[type="checkbox"]:checked {
-    background-color: var(--checkbox-checked-background); /* Change background */
-    border-color: var(--checkbox-checked-background); /* Match border color */
+    background-color: var(--checkbox-checked-background); 
+    border-color: var(--checkbox-checked-background); 
 }
 
 /* Show the checkmark when checked */
+
 input[type="checkbox"]:checked::after {
-    opacity: 1; /* Make the checkmark visible */
+    opacity: 1; 
 }
 
-/* Hover effect */
 input[type="checkbox"]:hover {
-    background-color: var(--checkbox-hover-background); /* Change background on hover */
-    border-color: var(--checkbox-hover-background); /* Match border color */
+    background-color: var(--checkbox-hover-background); 
+    border-color: var(--checkbox-hover-background); 
     transform: scale(1.02);
 }
 
 input[type="checkbox"]:checked:hover {
-    background-color: var(--checkbox-checked-hover-background); /* Change background on hover */
-    border-color: var(--checkbox-hover-background); /* Match border color */
+    background-color: var(--checkbox-checked-hover-background); 
+    border-color: var(--checkbox-hover-background);
     transform: scale(1.02);
 }
 
 
-/* Utility Classes */
-.completed {
-    text-decoration: line-through;
-    color: gray;
-    opacity: 0.5;
-}
-
-.popup {
-    /* For pop-up modals */
-    outline: none;
-    position: fixed;
-    align-items: center;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: whitesmoke;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    z-index: 1050;
-}
-
-.frequency-selector {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 25px;
-    height: 25px;
-    gap: 20px;
-}
-
-.frequency-selector label{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-top: 5px;
-}
-
-
-.popup-button {
-    width: 100px;
-    height: 40px;
-    border-radius: 8px;
-    border: solid black 0.5px;
-    margin-right: 10px;
-    cursor: pointer;
-}
-
-/* === Main Page Styling === */
 .main-page {
     font-family: Arial, sans-serif;
     display: flex;
@@ -149,7 +96,17 @@ input[type="checkbox"]:checked:hover {
     background-color: var(--background-color);
 }
 
-/* === Date Carousel Styling === */
+.selected {
+    font-weight: bold;
+    border-radius: var(--border-radius-medium);
+    width: 70px;
+    background-color: var(--button-background);
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Date Carousel */
+
 .carousel {
     display: flex;
     width: 80%;
@@ -159,7 +116,7 @@ input[type="checkbox"]:checked:hover {
 }
 
 .nav-button {
-    background-color: #4db6ac;
+    background-color: var(--button-background);
     border: none;
     color: white;
     margin: 0 10px;
@@ -185,18 +142,10 @@ input[type="checkbox"]:checked:hover {
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.selected {
-    font-weight: bold;
-    border-radius: 8px;
-    width: 70px;
-    background-color: var(--button-background);
-    color: white;
-    transform: scale(1.05);
-}
 
-/* === Habit List and Items Styling === */
 
-/* Container for the habit list */
+/* Habit list */
+
 .habitlist {
     display: flex;
     flex-direction: column;
@@ -205,17 +154,24 @@ input[type="checkbox"]:checked:hover {
     width: 80%; 
 }
 
-/* Individual habit item */
+
+/* Habit item */
+
 .habit {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: #4db6ac;
-    border-radius: 8px;
+    background-color: #B5EAD7;
+    border-radius: var(--border-radius-medium);
     margin-bottom: 10px;
     width: 95%;
+}
+
+.habit-info input[type = "checkbox"] {
+    height: 17px;
+    width: 17px;
 }
 
 .habit-info {
@@ -232,7 +188,12 @@ input[type="checkbox"]:checked:hover {
     line-height: 1.5;
 }
 
-/* Button group inside each habit */
+.completed {
+    text-decoration: line-through;
+    color: gray;
+    opacity: 0.5;
+}
+
 .button-group {
     display: flex;
     gap: 15px;
@@ -246,7 +207,6 @@ input[type="checkbox"]:checked:hover {
     align-items: center;
     justify-content: center;
     height: 30px;
-    /* width: 30px; */
     padding: 5px 25px;
     border: none;
     border-radius: 5px;
@@ -290,12 +250,6 @@ input[type="checkbox"]:checked:hover {
 }
 
 
-.habit-info input[type = "checkbox"] {
-    height: 17px;
-    width: 17px;
-}
-
-/* === Add Habit Section Styling === */
 .addHabitContainer {
     display: flex;
     width: 50%;
@@ -305,12 +259,35 @@ input[type="checkbox"]:checked:hover {
 }
 
 #addhabit {
+    /* white-space: normal; 
+    word-wrap: break-word; 
+    word-break: break-word;  */
     font-size: 25px;
-    width: 15%;
-    height: 40px;
+    width: 15%; 
+    max-width: 100%; 
+    height: 45px;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius-medium);
     cursor: pointer;
+    /* padding: 10 px 20px; */
+}
+
+
+
+/* Habit popup */
+
+.popup {
+    outline: none;
+    position: fixed;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: whitesmoke;
+    padding: 20px;
+    border-radius: var(--border-radius-medium);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 1050;
 }
 
 .habit-textbox {
@@ -320,6 +297,24 @@ input[type="checkbox"]:checked:hover {
 
 .habit-textbox input[type = "text"] {
     height: 30px;
+}
+
+.frequency-selector {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    height: 25px;
+    gap: 20px;
+}
+
+.frequency-selector label{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
 }
 
 
@@ -343,7 +338,7 @@ input[type="checkbox"]:checked:hover {
     margin-top: 10px;
     padding-bottom: 13px;
     padding-left: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .color-swatch {
@@ -351,7 +346,24 @@ input[type="checkbox"]:checked:hover {
 }
 
 .color-swatch:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
+}
+
+.popup-button {
+    font-size: 18px;
+    font-weight: var(--font-weight-bold);
+    width: 120px;
+    height: 40px;
+    border-radius: var(--border-radius-medium);
+    border: solid black 0.5px;
+    margin-right: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.error {
+    color: red;
+    align-items: left;
 }
 
 /* === Avatar Section Styling === */
@@ -390,7 +402,7 @@ input[type="checkbox"]:checked:hover {
     padding: 20px;
     background-color: #fff;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: var(--border-radius-medium);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
 }
