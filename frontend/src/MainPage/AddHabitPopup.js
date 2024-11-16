@@ -49,7 +49,7 @@ const AddHabitPopup = ({
                     type="text"
                     placeholder="Add Habit"
                     value={habitName}
-                    onChange={(e) => setHabitName(e.target.value)}
+                    onChange={handleInputChange}
                 />
             </div>
             <div className="frequency-selector">

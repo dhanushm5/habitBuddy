@@ -50,7 +50,7 @@ const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm, setShowEdit
 
     return (
         <div className="popup">
-            <h3>Edit Habit</h3>
+            <h2>Edit Habit</h2>
             <div className = "habit-textbox">
                 <input
                     type="text"
@@ -100,8 +100,8 @@ const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm, setShowEdit
                     ))}
                 </div>
             </div>
-            <button class = "button" onClick={handleEditClick}>Save</button>
-            <button onClick={resetHabitForm}>Cancel</button>
+            <button class = "popup-button" onClick={handleEditClick}>Save</button>
+            <button class = "popup-button" onClick={resetHabitForm}>Cancel</button>
             {error && <div className="error">{error}</div>}
         </div>
     );
