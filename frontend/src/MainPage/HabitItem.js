@@ -24,17 +24,14 @@ const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, ha
     return (
         <div 
             className="habit" 
-            style={{ backgroundColor: habit.color || '#4db6ac' }} 
+            style={{ backgroundColor: habit.color || '#B5EAD7' }} 
         >
-            <div className="habit-info">
-                <label className="custom-checkbox">
+            <div className = "habit-info">
                     <input 
                         type="checkbox"
                         checked={habit.completedDates.includes(selectedDate.toISOString().split('T')[0])}
                         onChange={() => handleToggleHabit(habit)}
                     />
-                    <span className="checkmark"></span>     
-                </label>
             </div>
 
             <span className={habit.completedDates.includes(selectedDate.toISOString().split('T')[0]) ? 'completed' : ''}>

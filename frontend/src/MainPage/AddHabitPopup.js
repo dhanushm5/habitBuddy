@@ -43,13 +43,13 @@ const AddHabitPopup = ({
 
     return (
         <div className="popup">
-            <h3>Add New Habit</h3>
-            <div className="habit-textbox">
+            <h2>Add New Habit</h2>
+            <div className = "habit-textbox">    
                 <input
                     type="text"
                     placeholder="Add Habit"
                     value={habitName}
-                    onChange={handleInputChange}
+                    onChange={(e) => setHabitName(e.target.value)}
                 />
             </div>
             <div className="frequency-selector">
@@ -65,7 +65,7 @@ const AddHabitPopup = ({
                 ))}
             </div>
             <div className="reminder-box">
-                <label>Set Reminder: </label>
+                <h3><label>Set Reminder: </label></h3>
                 <input
                     type="time"
                     value={reminderTime}
@@ -73,7 +73,7 @@ const AddHabitPopup = ({
                 />
             </div>
             <div className="color-picker">
-                <label>Select Habit Color: </label>
+                <h3><label>Select Habit Color: </label></h3>
                 <div className="color-swatches">
                     {pastelColors.map((color, index) => (
                         <div
@@ -92,8 +92,8 @@ const AddHabitPopup = ({
                     ))}
                 </div>
             </div>
-            <button className="button" onClick={handleAddClick}>Add Habit</button>
-            <button className="button" onClick={resetHabitForm}>Cancel</button>
+            <button class = "popup-button" onClick={handleAddClick}>Add Habit</button>
+            <button class = "popup-button" onClick={resetHabitForm}>Cancel</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
