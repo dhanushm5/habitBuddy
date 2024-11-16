@@ -1,72 +1,136 @@
-/* Calendar container */
-.calendar-container {
-    background-color: #ffffff; /* White background for contrast */
-    border-radius: 15px; /* Soft corners */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-    padding: 20px; /* Padding around the content */
-    max-width: 400px; /* Set a max width for the calendar */
-    margin-right: 20px; /* Space between the calendar and other content */
-    float: left; /* Align the calendar to the left */
+/* Wrapper for calendar and stats */
+:root {
+    --background-color: #efe9f4ff; /* Magnolia */
+    --button-background: #3eb489; /* Mint */
+}
+.calendar-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
 }
 
-/* Calendar navigation buttons */
+/* Container for the calendar */
+.calendar-container {
+    flex: 1;
+    margin-right: 20px;
+}
+
+/* Calendar navigation */
 .calendar-navigation {
-    margin: 10px 0;
     display: flex;
-    justify-content: space-between; /* Space buttons evenly */
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .calendar-navigation button {
-    padding: 10px;
-    margin: 0 5px;
-    cursor: pointer;
-    background-color: #ff6f61; /* Colorful button background */
+    background-color: #258ea6;
+    color: white;
     border: none;
-    color: white;
-    width: 20%;
-    border-radius: 5px;
-    font-size: 20px;
-}
-
-/* Days grid in the calendar */
-.days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); /* Create 7 columns for each day of the week */
-    gap: 8px; /* Space between days */
-}
-
-/* Individual day in the calendar */
-.day {
     padding: 10px;
-    background-color: #e0f7fa; /* Light blue background for days */
-    border: 3px solid #b2ebf2; /* Border color */
     cursor: pointer;
-    text-align: center;
-    width: 50%;
-    transition: all 0.3s ease; /* Smooth transition for hover and selection */
+    border-radius: 5px;
+    font-size: 1.2em;
 }
 
-/* Selected day styling */
-.day.selected {
-    background-color: #4caf50; /* Green background for selected day */
-    color: white;
-    box-shadow: 0 0 15px rgba(76, 175, 80, 0.7); /* Green glow effect */
-    transition: box-shadow 0.3s ease; /* Smooth transition for the glow */
-}
-
-/* Empty day slots (for days that don't belong to the current month) */
-.day.empty {
-    visibility: hidden; /* Hide empty slots */
-}
-
-/* Hover effect for days */
-.day:hover {
-    background-color: #b2ebf2; /* Light blue on hover */
-    box-shadow: 0 0 10px rgba(0, 188, 212, 0.7); /* Light blue glow on hover */
-}
-
-/* Styling for date text */
-span {
-    font-size: 18px;
+.calendar-navigation span {
+    font-size: 1.2em;
     font-weight: bold;
+}
+
+/* Calendar Grid Layout */
+.calendar-grid {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Calendar Header */
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.calendar-header-day {
+    font-size: 1.1em;
+    color: var(--button-background);
+    padding: 5px;
+}
+
+/* Calendar Days */
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* One column for each day of the week */
+    gap: 10px;
+}
+
+/* Calendar Day Cells */
+.day {
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.day.selected {
+    background-color: var(--button-background);
+    color: white;
+}
+
+.day.tracked {
+    background-color: #FFDFBA;
+    border: 2px solid #53dd6c;
+}
+
+.day.completed {
+    background-color: #53dd6c;
+    color: white;
+    border: 2px solid #258ea6;
+}
+
+.day.empty {
+    background-color: transparent;
+    border: none;
+}
+
+/* Stats Section */
+.calendar-stats {
+    flex-basis: 250px;
+    padding: 20px;
+    background-color: var(--background-color);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-stats h3 {
+    margin-bottom: 10px;
+}
+
+.calendar-stats p {
+    margin: 5px 0;
+}
+
+/* Button styles for navigation */
+.calendar-navigation button {
+    font-size: 1.2em;
+    padding: 10px 15px;
+    background-color: #258ea6;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.calendar-navigation button:hover {
+    background-color: #1a6f8e;
+}
+
+/* Calendar Day Hover Effect */
+.day:hover {
+    background-color: #80ffe8;
+    color: #092327;
 }
