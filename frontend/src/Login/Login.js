@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {motion} from "framer-motion";
 import "./Login.css"; 
 
 const Login = ({ setToken, setIsLoggedIn }) => {
@@ -33,60 +34,60 @@ const Login = ({ setToken, setIsLoggedIn }) => {
   };
 
   return (
-    <div className="login-container">
-      {/* Left side: Image section */}
-      <div className="login-left">
-        <img src={process.env.PUBLIC_URL + '/login-pic-green-compress.jpg'} alt="Login visual" className="login-image" loading = "lazy" />
-      </div>
-
-      {/* Right side: Login form */}
-      <div className="login-right">
-        <div className="login-logo">
-          <h2>Login</h2>
+      <div className="login-container">
+        {/* Left side: Image section */}
+        <div className="login-left">
+          <img src={process.env.PUBLIC_URL + '/login-pic-green-compress.jpg'} alt="Login visual" className="login-image" loading = "lazy" />
         </div>
 
-        <form onSubmit={handleLogin} className="login-form">
-          <div className="form-group">
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+        {/* Right side: Login form */}
+        <div className="login-right">
+          <div className="login-logo">
+            <h2>Login</h2>
           </div>
 
-          {/* Error message */}
-          {error && <div className="error">{error}</div>}
+          <form onSubmit={handleLogin} className="login-form">
+            <div className="form-group">
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
 
-          {/* Login button */}
-          <button type="submit" className="login-btn">
-            Login
-          </button>
-        </form>
+            {/* Error message */}
+            {error && <div className="error">{error}</div>}
 
-        {/* Forgot password link */}
-        <div className="forgot-password">
-          <a href="/forgot-password">Forgot Password?</a>
-        </div>
+            {/* Login button */}
+            <button type="submit" className="login-btn">
+              Login
+            </button>
+          </form>
 
-        {/* Register link */}
-        <div className="register">
-          <span>Don't have an account? </span>
-          <a href="/register">Register here</a>
-          
+          {/* Forgot password link */}
+          <div className="forgot-password">
+            <a href="/forgot-password">Forgot Password?</a>
+          </div>
+
+          {/* Register link */}
+          <div className="register">
+            <span>Don't have an account? </span>
+            <a href="/register">Register here</a>
+            
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 

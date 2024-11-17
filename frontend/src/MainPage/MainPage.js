@@ -13,7 +13,7 @@ const MainPage = ({ token, isLoggedIn }) => {
     const [habits, setHabits] = useState([]);
     const [newHabitName, setNewHabitName] = useState('');
     const [frequencyDays, setFrequencyDays] = useState([]);
-    const [habitColor, setHabitColor] = useState('#C7CEEA');
+    const [habitColor, setHabitColor] = useState('#B5EAD7');
     const [showAddHabitPopup, setShowAddHabitPopup] = useState(false);
     const [reminderTime, setReminderTime] = useState('');
     const [avatar, setAvatar] = useState({});
@@ -193,7 +193,7 @@ const MainPage = ({ token, isLoggedIn }) => {
     const resetHabitForm = () => {
         setNewHabitName('');
         setFrequencyDays([]);
-        setHabitColor('#4db6ac');
+        setHabitColor('');
         setShowAddHabitPopup(false);
     };
 
@@ -207,7 +207,7 @@ const MainPage = ({ token, isLoggedIn }) => {
 
     return (
         <div className="main-page">
-            <h1>Habit Tracker</h1>
+            <h1>Habit Buddy</h1>
 
             {showAvatar && 
                 <div className="avatar-section">

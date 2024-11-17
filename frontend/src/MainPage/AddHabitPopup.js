@@ -23,10 +23,12 @@ const AddHabitPopup = ({
 
     const handleAddClick = () => {
         if (!habitName) {
+            console.error('Habit name cannot be empty');
             setError('Habit name cannot be empty');
             return;
         }
         if (frequencyDays.length === 0) {
+            console.error('Habit frequency cannot be zero');
             setError('Habit frequency cannot be zero');
             return;
         }
@@ -44,7 +46,7 @@ const AddHabitPopup = ({
     return (
         <div className="popup">
             <h3>Add New Habit</h3>
-            <div className="habit-textbox">
+            <div className = "habit-textbox">    
                 <input
                     type="text"
                     placeholder="Add Habit"
@@ -55,7 +57,7 @@ const AddHabitPopup = ({
             <div className="frequency-selector">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
                     <label key={index}>
-                        {day}
+                        <span>{day}</span>
                         <input
                             type="checkbox"
                             checked={frequencyDays.includes(index)}
@@ -65,7 +67,7 @@ const AddHabitPopup = ({
                 ))}
             </div>
             <div className="reminder-box">
-                <label>Set Reminder: </label>
+                <h3><label>Set Reminder: </label></h3>
                 <input
                     type="time"
                     value={reminderTime}
@@ -73,7 +75,7 @@ const AddHabitPopup = ({
                 />
             </div>
             <div className="color-picker">
-                <label>Select Habit Color: </label>
+                <h3><label>Select Habit Color: </label></h3>
                 <div className="color-swatches">
                     {pastelColors.map((color, index) => (
                         <div
@@ -81,19 +83,19 @@ const AddHabitPopup = ({
                             className="color-swatch"
                             style={{
                                 backgroundColor: color,
-                                width: '30px',
-                                height: '30px',
+                                width: habitColor === color ? '33px' : '30px',
+                                height: habitColor === color ? '33px' : '30px',
                                 borderRadius: '50%',
                                 cursor: 'pointer',
-                                border: habitColor === color ? '2px solid black' : '1px solid gray',
+                                border: habitColor === color ? '3px solid black' : '1px solid gray',
                             }}
                             onClick={() => setHabitColor(color)}
                         />
                     ))}
                 </div>
             </div>
-            <button className="button" onClick={handleAddClick}>Add Habit</button>
-            <button className="button" onClick={resetHabitForm}>Cancel</button>
+            <button class = "button" onClick={handleAddClick}>Add Habit</button>
+            <button onClick={resetHabitForm}>Cancel</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );

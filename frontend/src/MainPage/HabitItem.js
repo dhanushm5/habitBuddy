@@ -24,16 +24,16 @@ const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, ha
     return (
         <div 
             className="habit" 
-            style={{ backgroundColor: habit.color || '#4db6ac' }} 
+            style={{ backgroundColor: habit.color || '#B5EAD7' }} 
         >
-            <div className="habit-info">
-                <label className="custom-checkbox">
+            <div className = "habit-info">
+                <label className = "custom-checkbox">
                     <input 
                         type="checkbox"
                         checked={habit.completedDates.includes(selectedDate.toISOString().split('T')[0])}
                         onChange={() => handleToggleHabit(habit)}
                     />
-                    <span className="checkmark"></span>     
+                    <span className = "checkmark"></span>     
                 </label>
             </div>
 
@@ -41,6 +41,7 @@ const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, ha
                 {habit.name}
             </span>
 
+            {/* Buttons for Statistics, Edit, Delete */}
             <div className="button-group">
                 <button className="stats-button" onClick={handleStatsClick}>
                     <img className="button-icon" alt="Statistics" src="/bar-chart.png" />

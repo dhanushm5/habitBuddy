@@ -1,4 +1,18 @@
 /* Main container holding the image and form */
+:root {
+  --font-family: 'Arial, sans-serif';
+  --font-size: 16px;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+  --border-radius-medium: 8px
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  font-weight: var(--font-weight-normal);
+}
+
 .login-container {
     display: flex;
     width: 100%;
