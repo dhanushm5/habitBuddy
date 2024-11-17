@@ -36,46 +36,6 @@ const shiftDate = (date, numDays) => {
   return newDate;
 };
 
-const calculateCurrentStreak = (completedDates) => {
-  const dates = completedDates
-    .map(date => new Date(date).setHours(0, 0, 0, 0))
-    .sort((a, b) => b - a);
-  let streak = 0;
-  let today = new Date().setHours(0, 0, 0, 0);
-
-  for (let date of dates) {
-    if (date === today - streak * 86400000) {
-      streak++;
-    } else {
-      break;
-    }
-  }
-  return streak;
-};
-
-const calculateLongestStreak = (completedDates) => {
-  if (completedDates.length === 0) return 0;
-
-  const dates = completedDates
-    .map(date => new Date(date).setHours(0, 0, 0, 0))
-    .sort((a, b) => a - b);
-
-  let longestStreak = 1;
-  let currentStreak = 1;
-
-  for (let i = 1; i < dates.length; i++) {
-    if (dates[i] - dates[i - 1] === 86400000) {
-      currentStreak++;
-    } else if (dates[i] !== dates[i - 1]) {
-      currentStreak = 1;
-    }
-    if (currentStreak > longestStreak) {
-      longestStreak = currentStreak;
-    }
-  }
-  return longestStreak;
-};
-
 const calculateWeekdayCompletions = (completedDates) => {
   const weekdays = Array(7).fill(0);
   completedDates.forEach(dateStr => {
@@ -282,7 +242,7 @@ const Calendar = () => {
   };
 
   const pieChartData = {
-    labels: ['Completed', 'Remaining'],
+    labels: ['Completed', 'Missed'],
     datasets: [
       {
         data: [completedDays, totalDays - completedDays],
@@ -406,12 +366,14 @@ const Calendar = () => {
 
       {stats && (
         <div className="stats">
-          <h3>Statistics</h3>
-          <p>Total Days: {totalDays}</p>
-          <p>Completed Days: {completedDays}</p>
-          <p>Completion Rate: {completionRate}%</p>
-          <p>Current Streak: {currentStreak} days</p>
-          <p>Longest Streak: {longestStreak} days</p>
+          <div className="statsText">
+            <h3>Statistics</h3>
+            <p>Total Days: {totalDays}</p>
+            <p>Completed Days: {completedDays}</p>
+            <p>Completion Rate: {completionRate}%</p>
+            <p>Current Streak: {currentStreak} days</p>
+            <p>Longest Streak: {longestStreak} days</p>
+          </div>
 
           <div className="chart-container">
             <h4>Completion Overview</h4>

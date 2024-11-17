@@ -41,13 +41,9 @@ const MainPage = ({ token, isLoggedIn }) => {
     }, [isLoggedIn]);
 
     useEffect(() => {
-        console.log('habitCount:', habitCount);
-        console.log('habitsForToday.length:', habitsForToday.length);
         if (habitCount === habitsForToday.length) {
-            console.log('Setting showPopup to true');
             setShowPopup(true);
         } else {
-            console.log('Setting showPopup to false');
             setShowPopup(false);
         }
     }, [habitCount, habitsForToday]);
