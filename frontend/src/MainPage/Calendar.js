@@ -27,6 +27,15 @@ const Calendar = () => {
         }
 
         for (let day = 1; day <= totalDays; day++) {
+            // Check if this day is in the completed dates of the habit
+            let backgroundColor;
+            
+            if (habit && habit.completedDates.includes(`${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`)) {
+                backgroundColor = habit.color; // Use the assigned color for completed days
+            } else {
+                backgroundColor = '#e0f7fa'; // Default color for non-completed days
+            }
+
             days.push(
                 <div
                     className={`day ${currentDate.getDate() === day &&
@@ -36,6 +45,7 @@ const Calendar = () => {
                         : ''
                     }`}
                     key={day}
+                    style={{ backgroundColor }} // Apply dynamic background color
                     onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day))}
                 >
                     {day}
@@ -46,9 +56,9 @@ const Calendar = () => {
         return days;
     };
 
-    const changeMonth = (month) => {
+    const changeDay = (days) => {
         const newDate = new Date(currentDate);
-        newDate.setMonth(newDate.getMonth() + month);
+        newDate.setDate(newDate.getDate() + days);
         setCurrentDate(newDate);
     };
 
@@ -57,9 +67,9 @@ const Calendar = () => {
             <h1>{habit ? habit.name : 'Habit Calendar'}</h1>
 
             <div className="calendar-navigation">
-                <button onClick={() => changeMonth(-1)}>&lt;</button>
-                <span>{currentDate.toDateString().split(" ")[1] + " " + currentDate.toDateString().split(" ")[3]}</span>
-                <button onClick={() => changeMonth(1)}>&gt;</button>
+                <button onClick={() => changeDay(-1)}>&lt;</button>
+                <span>{currentDate.toLocaleString('default', { month: 'long' })} {currentDate.getFullYear()}</span>
+                <button onClick={() => changeDay(1)}>&gt;</button>
             </div>
 
             <div className="days">

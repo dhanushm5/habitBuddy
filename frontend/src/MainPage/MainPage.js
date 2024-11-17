@@ -1,3 +1,4 @@
+// MainPage.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MainPage.css';
@@ -15,16 +16,15 @@ const MainPage = ({ token, isLoggedIn }) => {
     const [habitColor, setHabitColor] = useState('#C7CEEA');
     const [showAddHabitPopup, setShowAddHabitPopup] = useState(false);
     const [reminderTime, setReminderTime] = useState('');
-    const [avatar, setAvatar] = useState({}); // State to store the avatar configuration
-    const [editAvatar, setEditAvatar] = useState(false); // Control AvatarBuilder visibility
-    const showAvatar = false;       // to toggle visibility of avatar
+    const [avatar, setAvatar] = useState({});
+    const [editAvatar, setEditAvatar] = useState(false);
+    const showAvatar = false;
 
     const navigate = useNavigate();
 
     useEffect(() => {
         if (isLoggedIn) {
             fetchHabits();
-            
             fetchAvatar();
         } else {
             navigate("/login");
@@ -83,7 +83,7 @@ const MainPage = ({ token, isLoggedIn }) => {
                     console.error('Failed to add habit:', data.error);
                 }
                 resetHabitForm();
-                fetchHabits(); // Refresh habits after adding
+                fetchHabits();
             } catch (error) {
                 console.error('Failed to add habit:', error);
             }
@@ -135,10 +135,9 @@ const MainPage = ({ token, isLoggedIn }) => {
     };
 
     const handleToggleHabit = async (habit) => {
-        const date = selectedDate.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+        const date = selectedDate.toISOString().split('T')[0];
 
         if (habit.completedDates.includes(date)) {
-            // If already completed, remove the completion
             try {
                 const response = await fetch(`http://localhost:2000/habits/${habit._id}/incomplete`, {
                     method: 'POST',
@@ -164,7 +163,6 @@ const MainPage = ({ token, isLoggedIn }) => {
                 console.error('Failed to mark habit as incomplete:', error);
             }
         } else {
-            // If not completed, mark it as complete
             try {
                 const response = await fetch(`http://localhost:2000/habits/${habit._id}/complete`, {
                     method: 'POST',
@@ -200,11 +198,11 @@ const MainPage = ({ token, isLoggedIn }) => {
     };
 
     const handleViewCalendar = (habit) => {
-        navigate('/calendar', { state: { habit, selectedDate } }); // Navigate with selected habit and date
+        navigate('/calendar', { state: { habit, selectedDate } });
     };
 
     const handleViewStatistics = (habit) => {
-        navigate('/stats', { state: habit._id}); // Navigate with habit id
+        navigate('/stats', { state: { habitId: habit._id } });
     };
 
     return (
@@ -215,30 +213,23 @@ const MainPage = ({ token, isLoggedIn }) => {
                 <div className="avatar-section">
                     <h2>Your Avatar</h2>
                     <AvatarDisplay avatar={avatar} />
-
-                    {/* Toggle buttons for different avatar systems */}
                     <button onClick={() => setEditAvatar(!editAvatar)}>
                         {editAvatar ? 'Close Avatar Builder' : 'Edit Avatar'}
                     </button>
                 </div>
             }
-            
 
-            {/* Conditionally render AvatarBuilder */}
             {editAvatar && (
                 <AvatarBuilder
                     avatar={avatar}
                     setAvatar={setAvatar}
-                    token={token} // Pass token if needed for saving avatar
+                    token={token}
                 />
             )}
 
             <DateCarousel
-                
                 selectedDate={selectedDate}
-                
                 changeDate={(days) => setSelectedDate(new Date(selectedDate.setDate(selectedDate.getDate() + days)))}
-            
             />
 
             <h2>Habits for {selectedDate.toLocaleDateString('en-GB')}</h2>
@@ -252,7 +243,7 @@ const MainPage = ({ token, isLoggedIn }) => {
                 handleViewStatistics={handleViewStatistics}
             />
 
-            <div class = "addHabitContainer">
+            <div className="addHabitContainer">
                 <button id="addhabit" onClick={() => setShowAddHabitPopup(true)}>Add Habit</button>
             </div>
 

@@ -1,7 +1,18 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-
-const AddHabitPopup = ({ habitName, setHabitName, frequencyDays, handleFrequencyChange, reminderTime, setReminderTime, habitColor, setHabitColor, handleAddHabit, resetHabitForm }) => {
+const AddHabitPopup = ({
+    habitName,
+    setHabitName,
+    frequencyDays,
+    handleFrequencyChange,
+    reminderTime,
+    setReminderTime,
+    habitColor,
+    setHabitColor,
+    handleAddHabit,
+    resetHabitForm
+}) => {
     // Define an array of pastel colors
     const pastelColors = [
         '#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF',
@@ -12,12 +23,10 @@ const AddHabitPopup = ({ habitName, setHabitName, frequencyDays, handleFrequency
 
     const handleAddClick = () => {
         if (!habitName) {
-            console.error('Habit name cannot be empty');
             setError('Habit name cannot be empty');
             return;
         }
         if (frequencyDays.length === 0) {
-            console.error('Habit frequency cannot be zero');
             setError('Habit frequency cannot be zero');
             return;
         }
@@ -25,15 +34,22 @@ const AddHabitPopup = ({ habitName, setHabitName, frequencyDays, handleFrequency
         resetHabitForm();
     }
 
+    const handleInputChange = (e) => {
+        setHabitName(e.target.value);
+        if (error) {
+            setError(''); // Clear error when user starts typing
+        }
+    }
+
     return (
         <div className="popup">
             <h3>Add New Habit</h3>
-            <div className = "habit-textbox">    
+            <div className="habit-textbox">
                 <input
                     type="text"
                     placeholder="Add Habit"
-                    value={newHabit}
-                    onChange={(e) => setNewHabit(e.target.value)}
+                    value={habitName}
+                    onChange={handleInputChange}
                 />
             </div>
             <div className="frequency-selector">
@@ -52,7 +68,6 @@ const AddHabitPopup = ({ habitName, setHabitName, frequencyDays, handleFrequency
                 <label>Set Reminder: </label>
                 <input
                     type="time"
-                    placeholder='HH:MM'
                     value={reminderTime}
                     onChange={(e) => setReminderTime(e.target.value)}
                 />
@@ -77,11 +92,25 @@ const AddHabitPopup = ({ habitName, setHabitName, frequencyDays, handleFrequency
                     ))}
                 </div>
             </div>
-            <button class = "button" onClick={handleAddClick}>Add Habit</button>
-            <button onClick={resetHabitForm}>Cancel</button>
+            <button className="button" onClick={handleAddClick}>Add Habit</button>
+            <button className="button" onClick={resetHabitForm}>Cancel</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
+};
+
+// Adding PropTypes for better documentation and validation
+AddHabitPopup.propTypes = {
+    habitName: PropTypes.string.isRequired,
+    setHabitName: PropTypes.func.isRequired,
+    frequencyDays: PropTypes.array.isRequired,
+    handleFrequencyChange: PropTypes.func.isRequired,
+    reminderTime: PropTypes.string.isRequired,
+    setReminderTime: PropTypes.func.isRequired,
+    habitColor: PropTypes.string.isRequired,
+    setHabitColor: PropTypes.func.isRequired,
+    handleAddHabit: PropTypes.func.isRequired,
+    resetHabitForm: PropTypes.func.isRequired,
 };
 
 export default AddHabitPopup;
