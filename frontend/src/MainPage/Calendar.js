@@ -1,426 +1,458 @@
-// import React, { useState, useEffect } from 'react';
-// import './Calendar.css';
-// import { useLocation } from 'react-router-dom';
-
-// const Calendar = () => {
-//     const { state } = useLocation();
-//     const [currentDate, setCurrentDate] = useState(state ? new Date(state.selectedDate) : new Date());
-//     const [habit] = useState(state ? state.habit : null);
-
-//     useEffect(() => {
-//         if (state && state.selectedDate) {
-//             setCurrentDate(new Date(state.selectedDate));
-//         }
-//     }, [state]);
-
-//     const daysInMonth = (month, year) => {
-//         return new Date(year, month + 1, 0).getDate();
-//     };
-
-//     const generateCalendar = () => {
-//         const days = [];
-//         const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-//         const totalDays = daysInMonth(currentDate.getMonth(), currentDate.getFullYear());
-
-//         for (let i = 0; i < firstDay; i++) {
-//             days.push(<div className="day empty" key={`empty-${i}`}></div>);
-//         }
-
-//         for (let day = 1; day <= totalDays; day++) {
-//             days.push(
-//                 <div
-//                     className={`day ${currentDate.getDate() === day &&
-//                         currentDate.getMonth() === currentDate.getMonth() &&
-//                         currentDate.getFullYear() === currentDate.getFullYear()
-//                         ? 'selected'
-//                         : ''
-//                     }`}
-//                     key={day}
-//                     onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day))}
-//                 >
-//                     {day}
-//                 </div>
-//             );
-//         }
-
-//         return days;
-//     };
-
-//     const changeDay = (days) => {
-//         const newDate = new Date(currentDate);
-//         newDate.setDate(newDate.getDate() + days);
-//         setCurrentDate(newDate);
-//     };
-
-//     return (
-//         <div className="calendar-container">
-//             <h1>{habit ? habit.name : 'Habit Calendar'}</h1>
-
-//             <div className="calendar-navigation">
-//                 <button onClick={() => changeDay(-1)}>&lt;</button>
-//                 <span>{currentDate.toDateString()}</span>
-//                 <button onClick={() => changeDay(1)}>&gt;</button>
-//             </div>
-
-//             <div className="days">
-//                 {generateCalendar()}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Calendar;
-
-
-// import React, { useState, useEffect } from 'react';
-// import './Calendar.css';
-// import { useLocation } from 'react-router-dom';
-// import axios from 'axios'; // Assuming you're using axios to fetch data
-
-// const Calendar = () => {
-//     const { state } = useLocation();
-//     const [currentDate, setCurrentDate] = useState(state ? new Date(state.selectedDate) : new Date());
-//     const [habit, setHabit] = useState(state ? state.habit : null);
-//     const [completedDates, setCompletedDates] = useState([]); // State to track completed dates
-
-//     useEffect(() => {
-//         // Check if habit is available in state
-//         if (state && state.selectedDate) {
-//             setCurrentDate(new Date(state.selectedDate));
-//         }
-
-//         if (habit) {
-//             // Assuming you fetch habit data with completedDates from your backend
-//             setCompletedDates(habit.completedDates || []);
-//         }
-//     }, [state, habit]);
-
-//     // Function to fetch completed dates if the habit object is missing completedDates
-//     const fetchHabitData = async () => {
-//         try {
-//             const response = await axios.get(`/api/habits/${habit._id}`); // Adjust based on your API
-//             setHabit(response.data);
-//             setCompletedDates(response.data.completedDates || []);
-//         } catch (error) {
-//             console.error("Error fetching habit data", error);
-//         }
-//     };
-
-//     useEffect(() => {
-//         if (habit && habit._id) {
-//             fetchHabitData(); // Fetch habit data if it's not already present
-//         }
-//     }, [habit]);
-
-//     const daysInMonth = (month, year) => {
-//         return new Date(year, month + 1, 0).getDate();
-//     };
-
-//     const generateCalendar = () => {
-//         const days = [];
-//         const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-//         const totalDays = daysInMonth(currentDate.getMonth(), currentDate.getFullYear());
-
-//         for (let i = 0; i < firstDay; i++) {
-//             days.push(<div className="day empty" key={`empty-${i}`}></div>);
-//         }
-
-//         for (let day = 1; day <= totalDays; day++) {
-//             const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-//             const isCompleted = completedDates.some(date => new Date(date).toDateString() === currentDay.toDateString());
-
-//             days.push(
-//                 <div
-//                     className={`day ${currentDate.getDate() === day &&
-//                         currentDate.getMonth() === currentDate.getMonth() &&
-//                         currentDate.getFullYear() === currentDate.getFullYear()
-//                         ? 'selected'
-//                         : ''
-//                     } ${isCompleted ? 'completed' : ''}`} 
-//                     key={day}
-//                     onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day))}
-//                 >
-//                     {day}
-//                 </div>
-//             );
-//         }
-
-//         return days;
-//     };
-
-//     const changeDay = (days) => {
-//         const newDate = new Date(currentDate);
-//         newDate.setDate(newDate.getDate() + days);
-//         setCurrentDate(newDate);
-//     };
-
-//     return (
-//         <div className="calendar-container">
-//             <h1>{habit ? habit.name : 'Habit Calendar'}</h1>
-
-//             <div className="calendar-navigation">
-//                 <button onClick={() => changeDay(-1)}>&lt;</button>
-//                 <span>{currentDate.toDateString()}</span>
-//                 <button onClick={() => changeDay(1)}>&gt;</button>
-//             </div>
-
-//             <div className="days">
-//                 {generateCalendar()}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Calendar;
-
-// import React, { useState, useEffect } from 'react';
-// import './Calendar.css';
-// import { useLocation } from 'react-router-dom';
-
-// const Calendar = () => {
-//     const { state } = useLocation();
-//     const [currentDate, setCurrentDate] = useState(state ? new Date(state.selectedDate) : new Date());
-//     const [habit] = useState(state ? state.habit : null);
-//     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-//     useEffect(() => {
-//         if (state && state.selectedDate) {
-//             setCurrentDate(new Date(state.selectedDate));
-//         }
-//     }, [state]);
-
-//     const daysInMonth = (month, year) => {
-//         return new Date(year, month + 1, 0).getDate();
-//     };
-
-//     // Organize the calendar days by columns: Sunday to Saturday (0 to 6)
-//     const generateCalendar = () => {
-//         const days = [[], [], [], [], [], [], []]; // Array for Sunday to Saturday columns
-//         const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-//         const totalDays = daysInMonth(currentDate.getMonth(), currentDate.getFullYear());
-
-//         // Fill empty days before the first day of the month
-//         for (let i = 0; i < firstDay; i++) {
-//             days[i].push(<div className="day empty" key={`empty-${i}`}></div>);
-//         }
-
-//         // Fill the calendar days by their corresponding day of the week
-//         for (let day = 1; day <= totalDays; day++) {
-//             const currentDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-//             const dayOfWeek = currentDay.getDay(); // Get the day of the week (0-6)
-
-//             const isTrackedDay = habit && habit.frequencyDays.includes(dayOfWeek); // Check if this day is a tracked day
-//             const isCompleted = habit && habit.completedDates.includes(currentDay.toISOString().split('T')[0]); // Check if this day is marked completed
-
-//             days[dayOfWeek].push(
-//                 <div
-//                     className={`day ${currentDate.getDate() === day &&
-//                         currentDate.getMonth() === currentDate.getMonth() &&
-//                         currentDate.getFullYear() === currentDate.getFullYear()
-//                         ? 'selected'
-//                         : ''} 
-//                         ${isTrackedDay ? 'tracked' : ''} 
-//                         ${isCompleted ? 'completed' : ''}`}
-//                     key={day}
-//                     onClick={() => setCurrentDate(currentDay)}
-//                 >
-//                     {day}
-//                 </div>
-//             );
-//         }
-
-//         return days;
-//     };
-
-//     const changeDay = (days) => {
-//         const newDate = new Date(currentDate);
-//         newDate.setDate(newDate.getDate() + days);
-//         setCurrentDate(newDate);
-//     };
-
-//     const calculateStats = () => {
-//         if (!habit || !habit.frequencyDays) return {};
-    
-//         const currentMonth = currentDate.getMonth(); // Get the current month
-//         const currentYear = currentDate.getFullYear(); // Get the current year
-    
-//         let totalTrackedDays = 0;
-//         let completedTrackedDays = 0;
-    
-//         for (let day = 1; day <= daysInMonth(currentMonth, currentYear); day++) {
-//             const date = new Date(currentYear, currentMonth, day);
-//             const dayOfWeek = date.getDay();
-    
-//             if (habit.frequencyDays.includes(dayOfWeek)) {
-//                 totalTrackedDays++;
-//                 if (habit.completedDates.includes(date.toISOString().split('T')[0])) {
-//                     completedTrackedDays++;
-//                 }
-//             }
-//         }
-    
-//         return {
-//             totalTrackedDays,
-//             completedTrackedDays,
-//         };
-//     };
-
-//     const stats = calculateStats();
-
-//     return (
-//         <div className="calendar-wrapper">
-//             <div className="calendar-container">
-//                 <h1>{habit ? habit.name : 'Habit Calendar'}</h1>
-
-//                 <div className="calendar-navigation">
-//                     <button onClick={() => changeDay(-1)}>&lt;</button>
-//                     <span>{currentDate.toDateString()}</span>
-//                     <button onClick={() => changeDay(1)}>&gt;</button>
-//                 </div>
-
-//                 <div className="calendar-grid">
-//                     {/* Calendar header with days of the week */}
-//                     <div className="calendar-header">
-//                         {daysOfWeek.map((day, index) => (
-//                             <div key={index} className="calendar-header-day">{day}</div>
-//                         ))}
-//                     </div>
-
-//                     {/* Calendar grid, rendering the days in columns */}
-//                     {generateCalendar().map((dayColumn, index) => (
-//                         <div key={index} className="calendar-column">
-//                             {dayColumn}
-//                         </div>
-//                     ))}
-//                 </div>
-//             </div>
-
-//             <div className="calendar-stats">
-//                 <h3>Stats</h3>
-//                 {habit && stats.totalTrackedDays > 0 && (
-//                     <>
-//                         <p><strong>Total Tracked Days:</strong> {stats.totalTrackedDays}</p>
-//                         <p><strong>Completed Days:</strong> {stats.completedTrackedDays}</p>
-//                         <p><strong>Completion Rate:</strong> {((stats.completedTrackedDays / stats.totalTrackedDays) * 100).toFixed(2)}%</p>
-//                     </>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Calendar;
-
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Calendar.css';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
+import { Bar, Pie } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+  Title
+} from 'chart.js';
+import CalendarHeatmap from 'react-calendar-heatmap';
+import 'react-calendar-heatmap/dist/styles.css';
+import { Tooltip as ReactTooltip } from 'react-tooltip';
+import Chart from 'chart.js/auto';
+
+// Register ChartJS components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+  Title
+);
+
+// Helper functions
+const shiftDate = (date, numDays) => {
+  const newDate = new Date(date);
+  newDate.setDate(newDate.getDate() + numDays);
+  return newDate;
+};
+
+const calculateCurrentStreak = (completedDates) => {
+  const dates = completedDates
+    .map(date => new Date(date).setHours(0, 0, 0, 0))
+    .sort((a, b) => b - a);
+  let streak = 0;
+  let today = new Date().setHours(0, 0, 0, 0);
+
+  for (let date of dates) {
+    if (date === today - streak * 86400000) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+  return streak;
+};
+
+const calculateLongestStreak = (completedDates) => {
+  if (completedDates.length === 0) return 0;
+
+  const dates = completedDates
+    .map(date => new Date(date).setHours(0, 0, 0, 0))
+    .sort((a, b) => a - b);
+
+  let longestStreak = 1;
+  let currentStreak = 1;
+
+  for (let i = 1; i < dates.length; i++) {
+    if (dates[i] - dates[i - 1] === 86400000) {
+      currentStreak++;
+    } else if (dates[i] !== dates[i - 1]) {
+      currentStreak = 1;
+    }
+    if (currentStreak > longestStreak) {
+      longestStreak = currentStreak;
+    }
+  }
+  return longestStreak;
+};
+
+const calculateWeekdayCompletions = (completedDates) => {
+  const weekdays = Array(7).fill(0);
+  completedDates.forEach(dateStr => {
+    const date = new Date(dateStr);
+    const day = date.getDay();
+    weekdays[day]++;
+  });
+  return weekdays;
+};
+
+// HabitGraph component
+const HabitGraph = ({ habit, currentDate, completedDates }) => {
+  const canvasRef = useRef(null);
+  const chartInstanceRef = useRef(null);
+
+  useEffect(() => {
+    const calculateGraphData = () => {
+      const labels = [];
+      const data = [];
+      const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+        const dateString = date.toLocaleDateString('en-CA'); // Format as YYYY-MM-DD
+        labels.push(day);
+        if (habit.frequencyDays.includes(date.getDay())) {
+          data.push(completedDates.includes(dateString) ? 1 : 0);
+        } else {
+          data.push(null);
+        }
+      }
+      return { labels, data };
+    };
+
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+    }
+
+    if (canvasRef.current && habit) {
+      const chartContext = canvasRef.current.getContext('2d');
+      const { labels, data } = calculateGraphData();
+      const gradient = chartContext.createLinearGradient(0, 0, 0, 400);
+      gradient.addColorStop(0, 'rgba(75, 192, 192, 1)');
+      gradient.addColorStop(1, 'rgba(75, 192, 192, 0)');
+
+      chartInstanceRef.current = new Chart(chartContext, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Habit Completion',
+              data,
+              borderColor: 'rgba(75, 192, 192, 1)',
+              backgroundColor: gradient,
+              tension: 0.4,
+              fill: true,
+              spanGaps: true,
+              pointBackgroundColor: data.map(point =>
+                point === 1 ? 'rgba(34, 197, 94, 1)' : point === 0 ? 'rgba(239, 68, 68, 1)' : 'rgba(229, 231, 235, 1)'
+              ),
+              pointRadius: 6,
+              pointHoverRadius: 8,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            tooltip: {
+              backgroundColor: 'rgba(75, 192, 192, 0.8)',
+              titleFont: { size: 14, weight: 'bold' },
+              bodyFont: { size: 12 },
+              callbacks: {
+                label: function (tooltipItem) {
+                  return tooltipItem.raw === 1 ? 'Completed' : tooltipItem.raw === 0 ? 'Missed' : 'Not Tracked';
+                },
+              },
+            },
+            legend: {
+              display: true,
+              labels: {
+                font: { size: 14, weight: 'bold' },
+                color: '#4B5563',
+              },
+            },
+          },
+          animations: {
+            tension: {
+              duration: 2000,
+              easing: 'easeInOutBounce',
+              from: 0.8,
+              to: 0.4,
+              loop: false,
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function (value) {
+                  return value === 1 ? 'Completed' : value === 0 ? 'Missed' : '';
+                },
+                font: { size: 12 },
+              },
+              grid: {
+                color: 'rgba(229, 231, 235, 0.5)',
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Days of the Month',
+                font: { size: 14, weight: 'bold' },
+              },
+              grid: {
+                display: false,
+              },
+            },
+          },
+        },
+      });
+    }
+
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+        chartInstanceRef.current = null;
+      }
+    };
+  }, [habit, currentDate, completedDates]);
+
+  return <canvas ref={canvasRef} style={{ maxHeight: '400px' }} />;
+};
 
 const Calendar = () => {
-    const { state } = useLocation();
-    const [currentDate, setCurrentDate] = useState(state ? new Date(state.selectedDate) : new Date());
-    const [habit] = useState(state ? state.habit : null);
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const { state } = useLocation();
+  const [currentDate, setCurrentDate] = useState(state?.selectedDate ? new Date(state.selectedDate) : new Date());
+  const [habit, setHabit] = useState(state?.habit || null);
+  const [completedDates, setCompletedDates] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        if (state && state.selectedDate) {
-            setCurrentDate(new Date(state.selectedDate));
-        }
-    }, [state]);
+  useEffect(() => {
+    if (state?.selectedDate) setCurrentDate(new Date(state.selectedDate));
+    if (state?.habit) setHabit(state.habit);
+  }, [state]);
 
-    const daysInMonth = (month, year) => {
-        return new Date(year, month + 1, 0).getDate();
-    };
+  useEffect(() => {
+    if (habit) {
+      fetchHabitData();
+      fetchHabitStats();
+    }
+  }, [habit]);
 
-    const generateCalendar = () => {
-        const days = [];
-        const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-        const totalDays = daysInMonth(currentDate.getMonth(), currentDate.getFullYear());
+  const fetchHabitData = async () => {
+    if (!habit?._id) {
+      console.error('Habit or habit._id is undefined:', habit);
+      return;
+    }
+    try {
+      const response = await axios.get(`http://localhost:2000/habits/${habit._id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      setCompletedDates(response.data.completedDates || []);
+    } catch (error) {
+      console.error('Error fetching habit data', error);
+      setError('Failed to fetch habit data.');
+    }
+  };
 
-        // Fill empty spaces for the first row of the month
-        for (let i = 0; i < firstDay; i++) {
-            days.push(<div key={`empty-${i}`} className="day empty"></div>);
-        }
+  const fetchHabitStats = async () => {
+    if (!habit?._id) {
+      console.error('Habit or habit._id is undefined:', habit);
+      return;
+    }
+    try {
+      const response = await axios.get(`http://localhost:2000/habits/${habit._id}/stats`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      setStats(response.data);
+    } catch (error) {
+      console.error('Error fetching habit stats', error);
+      setError('Failed to fetch habit statistics.');
+    }
+  };
 
-        // Fill days for the month
-        for (let day = 1; day <= totalDays; day++) {
-            days.push(
-                <div
-                    key={day}
-                    className={`day ${currentDate.getDate() === day && currentDate.getMonth() === currentDate.getMonth() &&
-                        currentDate.getFullYear() === currentDate.getFullYear()
-                        ? 'selected'
-                        : ''
-                    }`}
-                    key={day}
-                    onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day))}
-                >
-                    {day}
-                </div>
-            );
-        }
+  const totalDays = stats?.totalDays || 0;
+  const completedDays = stats?.completedDays || 0;
+  const completionRate = stats?.completionRate.toFixed(2) || 0;
+  const currentStreak = stats?.currentStreak || 0;
+  const longestStreak = stats?.longestStreak || 0;
+  const weekdayCompletions = stats ? calculateWeekdayCompletions(completedDates) : Array(7).fill(0);
 
-        return days;
-    };
+  const barChartData = {
+    labels: ['Total Days', 'Completed Days'],
+    datasets: [
+      {
+        label: 'Days',
+        data: [totalDays, completedDays],
+        backgroundColor: ['#4db6ac', '#3eb489'],
+      },
+    ],
+  };
 
-    const changeDay = (days) => {
-        const newDate = new Date(currentDate);
-        newDate.setDate(newDate.getDate() + days);
-        setCurrentDate(newDate);
-    };
+  const pieChartData = {
+    labels: ['Completed', 'Remaining'],
+    datasets: [
+      {
+        data: [completedDays, totalDays - completedDays],
+        backgroundColor: ['#3eb489', '#dadcdc'],
+      },
+    ],
+  };
 
-    const calculateStats = () => {
-        if (!habit || !habit.frequencyDays) return {};
+  const weekdayCompletionsData = {
+    labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    datasets: [
+      {
+        label: 'Completions',
+        data: weekdayCompletions,
+        backgroundColor: '#3eb489',
+      },
+    ],
+  };
 
-        const currentMonth = currentDate.getMonth(); 
-        const currentYear = currentDate.getFullYear(); 
+  const barChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Habit Progress' },
+    },
+  };
 
-        let totalTrackedDays = 0;
-        let completedTrackedDays = 0;
+  const pieChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { position: 'bottom' },
+      title: { display: true, text: 'Completion Rate' },
+    },
+  };
 
-        for (let day = 1; day <= daysInMonth(currentMonth, currentYear); day++) {
-            const date = new Date(currentYear, currentMonth, day);
-            const dayOfWeek = date.getDay();
+  const weekdayBarChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Completions by Weekday' },
+    },
+  };
 
-            if (habit.frequencyDays.includes(dayOfWeek)) {
-                totalTrackedDays++;
-                if (habit.completedDates.includes(date.toISOString().split('T')[0])) {
-                    completedTrackedDays++;
-                }
-            }
-        }
+  const generateCalendar = () => {
+    const days = [];
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const firstDayIndex = date.getDay();
+    const prevLastDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate();
+    const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+    const nextDays = 42 - (firstDayIndex + lastDay);
 
-        return {
-            totalTrackedDays,
-            completedTrackedDays,
-        };
-    };
+    for (let x = firstDayIndex; x > 0; x--) {
+      days.push(<div className="prev-date" key={`prev-${x}`}>{prevLastDay - x + 1}</div>);
+    }
 
-    const stats = calculateStats();
+    for (let i = 1; i <= lastDay; i++) {
+      const dayDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), i + 1);
+      const formattedDate = dayDate.toISOString().split('T')[0];
+      const isCompleted = completedDates.includes(formattedDate);
 
-    return (
-        <div className="calendar-wrapper">
-            <div className="calendar-container">
-                <h1>{habit ? habit.name : 'Habit Calendar'}</h1>
-
-            <div className="calendar-navigation">
-                <button onClick={() => changeMonth(-1)}>&lt;</button>
-                <span>{currentDate.toDateString().split(" ")[1] + " " + currentDate.toDateString().split(" ")[3]}</span>
-                <button onClick={() => changeMonth(1)}>&gt;</button>
-            </div>
-
-            <div className="calendar-stats">
-                <h3>Stats</h3>
-                {habit && stats.totalTrackedDays > 0 && (
-                    <>
-                        <p><strong>Total Tracked Days:</strong> {stats.totalTrackedDays}</p>
-                        <p><strong>Completed Days:</strong> {stats.completedTrackedDays}</p>
-                        <p><strong>Completion Rate:</strong> {((stats.completedTrackedDays / stats.totalTrackedDays) * 100).toFixed(2)}%</p>
-                    </>
-                )}
-            </div>
+      days.push(
+        <div
+          className={`day ${isCompleted ? 'completed' : ''}`}
+          key={`current-${i}`}
+          onClick={() => setCurrentDate(dayDate)}
+        >
+          {i}
+          {isCompleted && <span className="dot"></span>}
         </div>
-    );
+      );
+    }
+
+    for (let j = 1; j <= nextDays; j++) {
+      days.push(<div className="next-date" key={`next-${j}`}>{j}</div>);
+    }
+
+    return days;
+  };
+
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ];
+
+  const prevMonth = () => {
+    const date = new Date(currentDate);
+    date.setMonth(date.getMonth() - 1);
+    setCurrentDate(date);
+  };
+
+  const nextMonth = () => {
+    const date = new Date(currentDate);
+    date.setMonth(date.getMonth() + 1);
+    setCurrentDate(date);
+  };
+
+  return (
+    <div className="calendar-container">
+      <h1>{habit ? habit.name : 'Habit Calendar'}</h1>
+
+      <div className="calendar-header">
+        <button onClick={prevMonth}>&lt;</button>
+        <h2>{months[currentDate.getMonth()]} {currentDate.getFullYear()}</h2>
+        <button onClick={nextMonth}>&gt;</button>
+      </div>
+
+      <div className="calendar">
+        <div className="weekdays">
+          <div>Sun</div>
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
+        </div>
+        <div className="days">{generateCalendar()}</div>
+      </div>
+
+      {error && <div className="error">{error}</div>}
+
+      {stats && (
+        <div className="stats">
+          <h3>Statistics</h3>
+          <p>Total Days: {totalDays}</p>
+          <p>Completed Days: {completedDays}</p>
+          <p>Completion Rate: {completionRate}%</p>
+          <p>Current Streak: {currentStreak} days</p>
+          <p>Longest Streak: {longestStreak} days</p>
+
+          <div className="chart-container">
+            <h4>Completion Overview</h4>
+            <Bar data={barChartData} options={barChartOptions} />
+
+            <h4>Completion Rate</h4>
+            <Pie data={pieChartData} options={pieChartOptions} />
+
+            <h4>Completions by Weekday</h4>
+            <Bar data={weekdayCompletionsData} options={weekdayBarChartOptions} />
+
+            <h4>Habit Completion Graph</h4>
+            <HabitGraph habit={habit} currentDate={currentDate} completedDates={completedDates} />
+          </div>
+
+          <div className="heatmap">
+            <h4>Habit Completion Heatmap</h4>
+            <CalendarHeatmap
+              startDate={shiftDate(new Date(), -150)}
+              endDate={new Date()}
+              values={completedDates.map(date => ({ date, count: 1 }))}
+              classForValue={(value) => {
+                if (!value) {
+                  return 'color-empty';
+                }
+                return value.count > 0 ? 'color-filled' : 'color-empty';
+              }}
+              showWeekdayLabels={true}
+              tooltipDataAttrs={(value) => {
+                if (!value || !value.date) {
+                  return { 'data-tip': 'No data' };
+                }
+                return { 'data-tip': `${value.date}: ${value.count} completions` };
+              }}
+            />
+            <ReactTooltip />
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Calendar;

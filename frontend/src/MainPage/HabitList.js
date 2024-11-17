@@ -2,7 +2,7 @@ import React from 'react';
 import HabitItem from './HabitItem';
 
 
-const HabitList = ({ habits, selectedDate, handleToggleHabit, handleDeleteHabit, handleEditHabit, handleViewCalendar, handleViewStatistics }) => {
+const HabitList = ({ habits, selectedDate, handleToggleHabit, handleDeleteHabit, handleEditHabit }) => {
     return (
         <div className="habitlist">
             {habits.map(habit => (
@@ -13,8 +13,6 @@ const HabitList = ({ habits, selectedDate, handleToggleHabit, handleDeleteHabit,
                     handleToggleHabit={handleToggleHabit} 
                     handleEditHabit={handleEditHabit}
                     handleDeleteHabit={handleDeleteHabit}
-                    handleViewCalendar={handleViewCalendar}
-                    handleViewStatistics={handleViewStatistics}
                 />
             ))}
         </div>

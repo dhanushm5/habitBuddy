@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EditHabitPopup from './EditHabitPopup';
 
-const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, handleDeleteHabit, handleViewCalendar, handleViewStatistics }) => {
+const HabitItem = ({ habit, selectedDate, handleToggleHabit, handleEditHabit, handleDeleteHabit }) => {
     const [showEditHabitPopup, setShowEditHabitPopup] = useState(false);
     const [updatedHabit, setUpdatedHabit] = useState(habit);
     const navigate = useNavigate();

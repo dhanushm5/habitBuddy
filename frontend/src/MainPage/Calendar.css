@@ -1,145 +1,137 @@
-/* Wrapper for calendar and stats */
-:root {
-    --background-color: #efe9f4ff; /* Magnolia */
-    --button-background: #3eb489; /* Mint */
-}
-.calendar-wrapper {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    align-items: flex-start;
-    flex-wrap: wrap;
-}
+/* Calendar.css */
 
-/* Container for the calendar */
 .calendar-container {
-    background-color: #ffffff; /* White background for contrast */
-    border-radius: 15px; /* Soft corners */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-    padding: 20px; /* Padding around the content */
-    max-width: 400px; /* Set a max width for the calendar */
-    margin-right: 20px; /* Space between the calendar and other content */
-    float: left; /* Align the calendar to the left */
-}
-
-/* Calendar navigation */
-.calendar-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.calendar-navigation button {
-    padding: 10px;
-    margin: 0 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 20px;
-}
-
-/* Calendar Grid Layout */
-.calendar-grid {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Calendar Header */
-.calendar-header {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    max-width: 900px;
+    margin: 0 auto;
     text-align: center;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.calendar-header-day {
-    font-size: 1.1em;
-    color: var(--button-background);
-    padding: 5px;
-}
-
-/* Calendar Days */
-.calendar-days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr); /* Create 7 columns for each day of the week */
-    gap: 8px; /* Space between days */
-}
-
-/* Calendar Day Cells */
-.day {
-    padding: 10px;
-    background-color: #e0f7fa; /* Light blue background for days */
-    border: 3px solid #b2ebf2; /* Border color */
-    cursor: pointer;
-    text-align: center;
-    width: 50%;
-    transition: all 0.3s ease; /* Smooth transition for hover and selection */
-}
-
-/* Selected day styling */
-.day.selected {
-    background-color: var(--button-background);
-    color: white;
-}
-
-.day.tracked {
-    background-color: #FFDFBA;
-    border: 2px solid #53dd6c;
-}
-
-.day.completed {
-    background-color: #53dd6c;
-    color: white;
-    box-shadow: 0 0 15px rgba(76, 175, 80, 0.7); /* Green glow effect */
-    transition: box-shadow 0.3s ease; /* Smooth transition for the glow */
-}
-
-.day.empty {
-    background-color: transparent;
-    border: none;
-}
-
-/* Stats Section */
-.calendar-stats {
-    flex-basis: 250px;
     padding: 20px;
-    background-color: var(--background-color);
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.calendar-stats h3 {
-    margin-bottom: 10px;
-}
-
-.calendar-stats p {
-    margin: 5px 0;
-}
-
-/* Button styles for navigation */
-.calendar-navigation button {
-    font-size: 1.2em;
-    padding: 10px 15px;
-    background-color: #258ea6;
-    color: white;
+  }
+  
+  .calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .calendar-header button {
+    background-color: #3eb489;
     border: none;
-    cursor: pointer;
+    color: white;
+    padding: 10px 15px;
+    margin: 0 10px;
     border-radius: 5px;
-}
-
-.calendar-navigation button:hover {
-    background-color: #1a6f8e;
-}
-
-/* Hover effect for days */
-.day:hover {
-    background-color: #b2ebf2; /* Light blue on hover */
-    box-shadow: 0 0 10px rgba(0, 188, 212, 0.7); /* Light blue glow on hover */
-}
-
-/* Styling for date text */
-span {
-    font-size: 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .calendar-header button:hover {
+    background-color: #2e8b57;
+  }
+  
+  .weekdays, .days {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .weekdays div, .days div {
+    width: calc(100% / 7);
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  .weekdays {
+    background-color: #f3f3f3;
     font-weight: bold;
-}
+  }
+  
+  .days div {
+    border: 1px solid #e6e6e6;
+    min-height: 60px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .days div.completed {
+    background-color: #d4edda;
+  }
+  
+  .days div:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .prev-date, .next-date {
+    color: #bfbfbf;
+  }
+  
+  .stats {
+    margin-top: 30px;
+    text-align: left;
+  }
+  
+  .stats p {
+    margin: 5px 0;
+  }
+  
+  .chart-container {
+    margin-top: 20px;
+  }
+  
+  .chart-container h4 {
+    margin: 20px 0 10px;
+  }
+  
+  .chart-container canvas {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .heatmap {
+    margin-top: 30px;
+  }
+  
+  .heatmap h4 {
+    margin-bottom: 10px;
+  }
+  
+  /* Heatmap Colors */
+  .color-empty {
+    fill: #ededed;
+  }
+  
+  .color-filled {
+    fill: #3eb489;
+  }
+  
+  .react-calendar-heatmap .react-calendar-heatmap-svg .day {
+    stroke: #ccc; /* Border color for each square */
+  }
+  
+  /* Tooltip Styling */
+  .react-tooltip {
+    background: #333;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+  
+  /* Optional: Dot Indicator for Completed Days */
+  .day .dot {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 6px;
+    width: 6px;
+    background-color: #3eb489;
+    border-radius: 50%;
+  }
+  
+  /* Error Message */
+  .error {
+    color: red;
+    margin-top: 20px;
+  }
