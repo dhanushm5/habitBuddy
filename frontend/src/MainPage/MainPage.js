@@ -21,7 +21,7 @@ const MainPage = ({ token, isLoggedIn }) => {
     const [reminderTime, setReminderTime] = useState('');
     const [avatar, setAvatar] = useState({});
     const [editAvatar, setEditAvatar] = useState(false);
-    const showAvatar = false;
+    const showAvatar = true;
     const [showPopup, setShowPopup] = useState(false);
     const [habitCount, setHabitCount] = useState(habits.filter(habit => habit.completedDates.includes(selectedDate.toISOString().split('T')[0])).length);
 
@@ -224,32 +224,34 @@ const MainPage = ({ token, isLoggedIn }) => {
     return (
         <div className="main-page">
             {showPopup && <AllHabitsCompletedPopup setHabitCount={setHabitCount} />}
-            <h1>Habit Buddy</h1>
+            <div className = "header">
+                <h1 className = "title">Habit Buddy</h1>
 
-            {showAvatar && 
-                <div className="avatar-section">
-                    <h2>Your Avatar</h2>
-                    <AvatarDisplay avatar={avatar} />
-                    <button onClick={() => setEditAvatar(!editAvatar)}>
-                        {editAvatar ? 'Close Avatar Builder' : 'Edit Avatar'}
-                    </button>
-                </div>
-            }
+                {showAvatar && 
+                    <div className="avatar-section">
+                        <h2>Your Avatar</h2>
+                        <AvatarDisplay avatar={avatar} />
+                        <button onClick={() => setEditAvatar(!editAvatar)}>
+                            {editAvatar ? 'Close Avatar Builder' : 'Edit Avatar'}
+                        </button>
+                    </div>
+                }
 
-            {editAvatar && (
-                <AvatarBuilder
-                    avatar={avatar}
-                    setAvatar={setAvatar}
-                    token={token}
-                />
-            )}
+                {editAvatar && (
+                    <AvatarBuilder
+                        avatar={avatar}
+                        setAvatar={setAvatar}
+                        token={token}
+                    />
+                )}
+            </div>
 
             <DateCarousel
                 selectedDate={selectedDate}
                 changeDate={(days) => setSelectedDate(new Date(selectedDate.setDate(selectedDate.getDate() + days)))}
             />
 
-            <h2>Habits for {selectedDate.toLocaleDateString('en-GB')}</h2>
+            <h2 className = "habits-for-date">Habits for {selectedDate.toLocaleDateString('en-GB')}</h2>
             <HabitList 
                 habits={habits.filter(habit => habit.frequencyDays.includes(selectedDate.getDay()))} 
                 selectedDate={selectedDate} 

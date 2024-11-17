@@ -92,9 +92,26 @@ input[type="checkbox"]:checked:hover {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-    height: 100vh;
+    padding: 10px;
+    /* height: 100vh; */
     background-color: var(--background-color);
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.title {
+    font-family: 'Nunito', sans-serif;
+    font-size: 5rem;
+    /* font options - Nunito Cinzel Bangers MedievalSharp "Fredoka One" Poppins*/
+    
 }
 
 .selected {
@@ -114,6 +131,7 @@ input[type="checkbox"]:checked:hover {
     align-items: center;
     justify-content: space-evenly;
     padding: 5px;
+    margin: 20px 0px;
 }
 
 .nav-button {
@@ -146,6 +164,11 @@ input[type="checkbox"]:checked:hover {
 
 
 /* Habit list */
+
+.habits-for-date {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
 
 .habitlist {
     display: flex;

@@ -8,9 +8,9 @@ const AllHabitsCompletedPopup = ({ setHabitCount}) => {
         <div className="popup">
             <div className="popup-content">
                 <h2>Congratulations!</h2>
-                <p>You've completed all your habits for the day!</p>
+                <p style = {{fontSize: "20px"}}>You've completed all your habits for the day!</p>
                 <audio src={dayCompletedSound} autoPlay />
-                <button onClick={() => setHabitCount(0)}>Close</button>
+                <button className = "popup-button" onClick={() => setHabitCount(0)}>Close</button>
             </div>
         </div>
     );
