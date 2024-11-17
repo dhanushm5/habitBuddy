@@ -128,6 +128,7 @@ input[type="checkbox"]:checked:hover {
 .carousel {
     display: flex;
     width: 80%;
+    height: 60px;
     align-items: center;
     justify-content: space-evenly;
     padding: 5px;
@@ -141,23 +142,28 @@ input[type="checkbox"]:checked:hover {
     margin: 0 10px;
     border-radius: 20px;
     width: 80px;
-    height: 40px;
-    font-size: 16px;
+    height: 60px;
+    font-size: 25px;
     cursor: pointer;
 }
 
 .dates {
+    height: 60px;
     display: flex;
     justify-content: space-around;
     flex-grow: 1;
     margin: 0 15px;
 }
 
-.date {
+.date{
+    display: flex;
+    height: 30px;
+    /* width: 80px; */
     text-align: center;
+    align-items: center;
     margin: 5px;
-    font-size: 18px;
-    padding: 10px 0;
+    font-size: 20px;
+    padding: 10px 10px;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
