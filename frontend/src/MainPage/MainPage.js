@@ -7,6 +7,9 @@ import AddHabitPopup from './AddHabitPopup';
 import DateCarousel from './DateCarousel';
 import AvatarBuilder from './AvatarBuilder';
 import AvatarDisplay from './AvatarDisplay';
+import completionSound from './sounds/completion.mp3';
+import incompletionSound from './sounds/incompletion.mp3'; 
+import AllHabitsCompletedPopup from './AllHabitsCompletedPopup.js';
 
 const MainPage = ({ token, isLoggedIn }) => {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -19,7 +22,13 @@ const MainPage = ({ token, isLoggedIn }) => {
     const [avatar, setAvatar] = useState({});
     const [editAvatar, setEditAvatar] = useState(false);
     const showAvatar = false;
+    const [showPopup, setShowPopup] = useState(false);
+    const [habitCount, setHabitCount] = useState(habits.filter(habit => habit.completedDates.includes(selectedDate.toISOString().split('T')[0])).length);
 
+    const habitsForToday = habits.filter(habit => {
+        return habit.frequencyDays.includes(selectedDate.getDay());
+    });
+    
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -30,6 +39,18 @@ const MainPage = ({ token, isLoggedIn }) => {
             navigate("/login");
         }
     }, [isLoggedIn]);
+
+    useEffect(() => {
+        console.log('habitCount:', habitCount);
+        console.log('habitsForToday.length:', habitsForToday.length);
+        if (habitCount === habitsForToday.length) {
+            console.log('Setting showPopup to true');
+            setShowPopup(true);
+        } else {
+            console.log('Setting showPopup to false');
+            setShowPopup(false);
+        }
+    }, [habitCount, habitsForToday]);
 
     const fetchAvatar = async () => {
         try {
@@ -44,6 +65,31 @@ const MainPage = ({ token, isLoggedIn }) => {
         }
     };
 
+    const saveAvatar = async (updatedAvatar) => {
+        // Save the updated avatar to the backend
+        try {
+            const response = await fetch('http://localhost:2000/avatar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(updatedAvatar),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Failed to save avatar:', errorData.error, errorData.details);
+            } else {
+                const result = await response.json();
+                console.log(result.message);
+            }
+        } catch (error) {
+            console.error('Error sending avatar data:', error);
+        }
+    };
+
+
     const fetchHabits = async () => {
         try {
             const response = await fetch('http://localhost:2000/habits', {
@@ -52,6 +98,7 @@ const MainPage = ({ token, isLoggedIn }) => {
             });
             const data = await response.json();
             setHabits(data);
+            setHabitCount(data.filter(habit => habit.completedDates.includes(selectedDate.toISOString().split('T')[0])).length);
         } catch (error) {
             console.error('Failed to fetch habits:', error);
         }
@@ -127,6 +174,12 @@ const MainPage = ({ token, isLoggedIn }) => {
         }
     };
 
+    const playSound = (sound) => {
+        const audio = new Audio(sound);
+        audio.play();
+    };
+
+
     const handleToggleHabit = async (habit) => {
         const today = new Date().toISOString().split('T')[0];
         const selectedDateString = selectedDate.toISOString().split('T')[0];
@@ -139,7 +192,7 @@ const MainPage = ({ token, isLoggedIn }) => {
         const url = habit.completedDates.includes(today) 
             ? `http://localhost:2000/habits/${habit._id}/incomplete` 
             : `http://localhost:2000/habits/${habit._id}/complete`;
-        const method = habit.completedDates.includes(today) ? 'POST' : 'POST';
+        const method =  'POST';
         const updatedDates = habit.completedDates.includes(today)
             ? habit.completedDates.filter(d => d !== today)
             : [...habit.completedDates, today];
@@ -154,8 +207,9 @@ const MainPage = ({ token, isLoggedIn }) => {
                 body: JSON.stringify({ date: today }),
             });
             if (response.ok) {
-                setHabits(prev => prev.map(h => h._id === habit._id ? { ...h, completedDates: updatedDates } : h));
+                setHabits(prev => prev.map(h => h._id === habit._id ? { ...h, completedDates: updatedDates} : h));
                 fetchHabits();
+                playSound(habit.completedDates.includes(today) ? incompletionSound : completionSound);
             } else {
                 console.error('Failed to toggle habit:', await response.json());
             }
@@ -173,6 +227,7 @@ const MainPage = ({ token, isLoggedIn }) => {
 
     return (
         <div className="main-page">
+            {showPopup && <AllHabitsCompletedPopup setHabitCount={setHabitCount} />}
             <h1>Habit Buddy</h1>
 
             {showAvatar && 
@@ -229,6 +284,7 @@ const MainPage = ({ token, isLoggedIn }) => {
                     resetHabitForm={resetHabitForm}
                 />
             )}
+            {/* <footer> Habit Buddy </footer> */}
         </div>
     );
 };
