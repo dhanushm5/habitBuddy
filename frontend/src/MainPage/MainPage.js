@@ -41,7 +41,7 @@ const MainPage = ({ token, isLoggedIn }) => {
     }, [isLoggedIn]);
 
     useEffect(() => {
-        if (habitCount === habitsForToday.length) {
+        if (habitCount === habitsForToday.length && habitCount > 0) {
             setShowPopup(true);
         } else {
             setShowPopup(false);
