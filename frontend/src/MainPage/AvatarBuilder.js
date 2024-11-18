@@ -1,12 +1,15 @@
+// Filename: AvatarBuilder.js
+
 import React, { useState } from 'react';
 
 const AvatarBuilder = ({ avatar, setAvatar, token }) => {
-    const [color, setColor] = useState(avatar.color || '#ffcc00');
-    const [accessory, setAccessory] = useState(avatar.accessory || 'none');
-    const [shape, setShape] = useState(avatar.shape || 'circle');
+    const [color, setColor] = useState(avatar?.color || '#ffcc00');
+    const [accessory, setAccessory] = useState(avatar?.accessory || 'none');
+    const [shape, setShape] = useState(avatar?.shape || 'circle');
 
     const handleSave = async () => {
-        setAvatar({ color, accessory, shape });
+        const updatedAvatar = { color, accessory, shape };
+        setAvatar(updatedAvatar);
 
         try {
             const response = await fetch('http://localhost:2000/avatar', {
@@ -15,7 +18,7 @@ const AvatarBuilder = ({ avatar, setAvatar, token }) => {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ color, accessory, shape }),
+                body: JSON.stringify(updatedAvatar),
             });
 
             if (!response.ok) {
