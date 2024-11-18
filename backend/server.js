@@ -318,7 +318,7 @@ async function run() {
 
     // Schedule reminders
     const scheduleReminders = async () => {
-      const habits = await habitsCollection.find({ reminderTime: { $exists: true } }).toArray();
+      const habits = await habitsCollection.find({ reminderTime: { $exists: true, $ne: null} }).toArray();
       habits.forEach(habit => {
       const [hour, minute] = habit.reminderTime.split(':');
       if (hour !== undefined && minute !== undefined) {
