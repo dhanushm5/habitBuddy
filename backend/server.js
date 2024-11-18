@@ -175,6 +175,23 @@ async function run() {
       }
     });
 
+    // Get Habit by ID
+    app.get('/habits/:id', authenticateJWT, async (req, res) => {
+      try {
+        const { id } = req.params;
+        const habit = await habitsCollection.findOne({
+          _id: new ObjectId(id),
+          userId: req.user.id, // Ensure the habit belongs to the authenticated user
+        });
+        if (!habit) {
+          return res.status(404).send({ error: 'Habit not found' });
+        }
+        res.status(200).json(habit);
+      } catch (err) {
+        res.status(500).send({ error: 'Failed to fetch habit', details: err.message });
+      }
+    });
+
     // Mark habit as completed
     app.post('/habits/:id/complete', authenticateJWT, async (req, res) => {
       try {
@@ -216,6 +233,47 @@ async function run() {
       }
     });
 
+    // Helper functions for streak calculations
+    const calculateCurrentStreak = (completedDates) => {
+      const dates = completedDates
+        .map(date => new Date(date).setHours(0, 0, 0, 0))
+        .sort((a, b) => b - a);
+      let streak = 0;
+      let today = new Date().setHours(0, 0, 0, 0);
+    
+      for (let date of dates) {
+        if (date === today - streak * 86400000) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+      return streak;
+    };
+    
+    const calculateLongestStreak = (completedDates) => {
+      if (completedDates.length === 0) return 0;
+    
+      const dates = completedDates
+        .map(date => new Date(date).setHours(0, 0, 0, 0))
+        .sort((a, b) => a - b);
+    
+      let longestStreak = 1;
+      let currentStreak = 1;
+    
+      for (let i = 1; i < dates.length; i++) {
+        if (dates[i] - dates[i - 1] === 86400000) {
+          currentStreak++;
+        } else if (dates[i] !== dates[i - 1]) {
+          currentStreak = 1;
+        }
+        if (currentStreak > longestStreak) {
+          longestStreak = currentStreak;
+        }
+      }
+      return longestStreak;
+    };
+
     // Add statistics endpoint
     app.get('/habits/:id/stats', authenticateJWT, async (req, res) => {
       try {
@@ -226,14 +284,18 @@ async function run() {
       }
 
       // Calculate statistics
-      const totalDays = habit.frequencyDays.length;
+      const totalDays = Math.ceil((Date.now() - new Date(habit.startDate).getTime()) / (1000 * 60 * 60 * 24));
       const completedDays = habit.completedDates.length;
       const completionRate = (completedDays / totalDays) * 100;
+      const currentStreak = calculateCurrentStreak(habit.completedDates);
+      const longestStreak = calculateLongestStreak(habit.completedDates);
 
       res.status(200).send({
         totalDays,
         completedDays,
         completionRate,
+        currentStreak,
+        longestStreak,
       });
       } catch (err) {
       res.status(500).send({ error: 'Failed to fetch habit statistics', details: err.message });
@@ -318,7 +380,7 @@ async function run() {
 
     // Schedule reminders
     const scheduleReminders = async () => {
-      const habits = await habitsCollection.find({ reminderTime: { $exists: true } }).toArray();
+      const habits = await habitsCollection.find({ reminderTime: { $exists: true, $ne: null } }).toArray();
       habits.forEach(habit => {
       const [hour, minute] = habit.reminderTime.split(':');
       if (hour !== undefined && minute !== undefined) {
