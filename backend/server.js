@@ -8,16 +8,27 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const cron = require('node-cron');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const xss = require('xss-clean');
+const mongoSanitize = require('express-mongo-sanitize');
+
 const app = express();
 const PORT = process.env.PORT;
 
-// Ignore self-signed certificates (for development only)
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-// Middleware
-app.use(cors());
-
+app.use(helmet()); 
+app.use(xss());
+app.use(mongoSanitize()); 
+app.use(cors()); 
 app.use(bodyParser.json());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 100, 
+  message: 'Too many requests from this IP, please try again later.',
+});
+app.use(limiter);
 
 // MongoDB Connection URI
 const uri = process.env.MONGO_URI;
@@ -26,15 +37,15 @@ const client = new MongoClient(uri, {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  }
+  },
 });
 
-// JWT secret
-const JWT_SECRET = process.env.JWT_SECRET; // Change for production
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Nodemailer transporter
 const transporter = nodemailer.createTransport({
-  service: 'Gmail', // or any other email service
+  service: 'Gmail', // Use Gmail or any other email service
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -43,40 +54,44 @@ const transporter = nodemailer.createTransport({
 
 async function run() {
   try {
-    await client.connect();
-    console.log("Connected to MongoDB!");
+      await client.connect();
+      console.log('Connected to MongoDB!');
+      const db = client.db('habit-tracker');
+      const habitsCollection = db.collection('habits');
+      const usersCollection = db.collection('users');
+      const avatarsCollection = db.collection('avatars');
 
-    const db = client.db("habit-tracker");
-    const habitsCollection = db.collection("habits");
-    const usersCollection = db.collection("users");
-    const avatarsCollection = db.collection("avatars");
+      // User Registration
+      app.post('/register', async (req, res) => {
+          const { email, password } = req.body;
+          if (!email || !password) {
+              return res.status(400).send({ error: 'Email and password are required.' });
+          }
+          const userExists = await usersCollection.findOne({ email });
+          if (userExists) {
+              return res.status(400).send({ error: 'User already exists. Try logging in.' });
+          }
+          const hashedPassword = await bcrypt.hash(password, 14); // Increased salt rounds for better security
+          const user = { email, password: hashedPassword };
+          await usersCollection.insertOne(user);
+          res.status(201).send({ message: 'User registered successfully.' });
+      });
 
-    // User Registration
-    app.post('/register', async (req, res) => {
-      const { email, password } = req.body;
-      if (!email || !password) {
-        return res.status(400).send({ error: 'Email and password are required.' });
-      } 
-      if (await usersCollection.findOne({email})) {
-        return res.status(400).send({ error: 'User already exists. Try logging in.' });
-      }
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const user = { email, password: hashedPassword };
-      await usersCollection.insertOne(user);
-      res.status(201).send({ message: 'User registered successfully.' });
-    });
+      // User Login
+      app.post('/login', async (req, res) => {
+          const { email, password } = req.body;
+          const user = await usersCollection.findOne({ email });
+          if (!user || !(await bcrypt.compare(password, user.password))) {
+              return res.status(401).send({ error: 'Invalid email or password.' });
+          }
+          const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+          res.send({ token });
+      });
 
-    // User Login
-    app.post('/login', async (req, res) => {
-      const { email, password } = req.body;
-      const user = await usersCollection.findOne({ email });
-      if (!user || !(await bcrypt.compare(password, user.password))) {
-        return res.status(401).send({ error: 'Invalid email or password' });
-      }
-      const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
-      res.send({ token });
-    });
-
+      // CSRF Token Endpoint (for frontend)
+      app.get('/csrf-token', (req, res) => {
+          res.json({ csrfToken: req.csrfToken() });
+      });
     // Password Reset Request
     app.post('/forgot-password', async (req, res) => {
       const { email } = req.body;
@@ -84,7 +99,7 @@ async function run() {
       try {
         const user = await usersCollection.findOne({ email });
         if (!user) {
-          return res.status(404).json({ error: 'User not found' });
+          return res.status(404).json({ error: 'User not found.' });
         }
 
         const token = crypto.randomBytes(32).toString('hex');
@@ -93,22 +108,18 @@ async function run() {
           expires: Date.now() + 3600000, // 1 hour
         };
 
-        await usersCollection.updateOne(
-          { email },
-          { $set: { resetToken } }
-        );
+        await usersCollection.updateOne({ email }, { $set: { resetToken } });
 
         const resetLink = `http://localhost:3000/reset-password?token=${token}&id=${user._id}`;
         await transporter.sendMail({
-          to: user.email, // Assuming the user document has an email field
+          to: user.email,
           subject: 'Password Reset',
           html: `<p>Click <a href="${resetLink}">here</a> to reset your password</p>`,
         });
 
-        res.json({ message: 'Password reset email sent' });
+        res.json({ message: 'Password reset email sent.' });
       } catch (error) {
-        res.status(500).json({ error: 'Failed to send password reset email' });
-        console.error('Error:', error);
+        res.status(500).json({ error: 'Failed to send password reset email.', details: error.message });
       }
     });
 
@@ -116,37 +127,46 @@ async function run() {
     app.post('/reset-password', async (req, res) => {
       try {
         const { token, id, newPassword } = req.body;
-        const user = await usersCollection.findOne({ _id: new ObjectId(id), "resetToken.token": token, "resetToken.expires": { $gt: Date.now() } });
+
+        const user = await usersCollection.findOne({
+          _id: new ObjectId(id),
+          'resetToken.token': token,
+          'resetToken.expires': { $gt: Date.now() },
+        });
+
         if (!user) {
-          return res.status(400).send({ error: 'Invalid or expired token' });
+          return res.status(400).send({ error: 'Invalid or expired token.' });
         }
 
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
         await usersCollection.updateOne(
           { _id: user._id },
-          { $set: { password: hashedPassword, resetToken: null, resetTokenExpiry: null } }
+          { $set: { password: hashedPassword, resetToken: null } }
         );
 
-        res.status(200).send({ message: 'Password reset successfully' });
+        res.status(200).send({ message: 'Password reset successfully.' });
       } catch (err) {
-        res.status(500).send({ error: 'Failed to reset password', details: err.message });
+        res.status(500).send({ error: 'Failed to reset password.', details: err.message });
       }
     });
 
     // Middleware to verify JWT
     const authenticateJWT = (req, res, next) => {
-      const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1];
-      if (token) {
-        jwt.verify(token, JWT_SECRET, (err, user) => {
-          if (err) {
-            return res.sendStatus(403);
-          }
-          req.user = user;
-          next();
-        });
-      } else {
-        res.sendStatus(401);
+      const authHeader = req.headers.authorization;
+      const token = authHeader && authHeader.split(' ')[1];
+
+      if (!token) {
+        return res.sendStatus(401);
       }
+
+      jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+          return res.sendStatus(403);
+        }
+
+        req.user = user;
+        next();
+      });
     };
 
     // Habit creation endpoint
@@ -378,41 +398,36 @@ async function run() {
       }
     });
 
-    // Schedule reminders
     const scheduleReminders = async () => {
       const habits = await habitsCollection.find({ reminderTime: { $exists: true, $ne: null } }).toArray();
       habits.forEach(habit => {
-      const [hour, minute] = habit.reminderTime.split(':');
-      if (hour !== undefined && minute !== undefined) {
-        cron.schedule(`${minute} ${hour} * * *`, async () => {
-        const user = await usersCollection.findOne({ _id: new ObjectId(habit.userId) });
-        if (user) {
-          await transporter.sendMail({
-          to: user.email,
-          subject: 'Habit Reminder',
-          text: `Reminder to complete your habit: ${habit.name}`,
+        const [hour, minute] = habit.reminderTime.split(':');
+        if (hour !== undefined && minute !== undefined) {
+          cron.schedule(`${minute} ${hour} * * *`, async () => {
+            const user = await usersCollection.findOne({ _id: new ObjectId(habit.userId) });
+            if (user) {
+              await transporter.sendMail({
+                to: user.email,
+                subject: 'Habit Reminder',
+                text: `Reminder to complete your habit: ${habit.name}`,
+              });
+            }
           });
         }
-        });
-      } else {
-        console.error(`Invalid reminderTime format for habit: ${habit.name}`);
-      }
       });
     };
 
     // Call scheduleReminders function
     scheduleReminders();
 
-
     // Start the server
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
-    });
-
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-  }
+  });
+} catch (error) {
+  console.error('Error connecting to MongoDB:', error);
+}
 }
 
-// Run the MongoDB client and the server
+// Run the server
 run().catch(console.dir);
