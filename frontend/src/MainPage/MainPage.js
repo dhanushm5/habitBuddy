@@ -21,7 +21,7 @@ const MainPage = ({ token, isLoggedIn }) => {
     const [reminderTime, setReminderTime] = useState('');
     const [avatar, setAvatar] = useState({});
     const [editAvatar, setEditAvatar] = useState(false);
-    const showAvatar = true;
+    const showAvatar = false;
     const [showPopup, setShowPopup] = useState(false);
     const [habitCount, setHabitCount] = useState(habits.filter(habit => habit.completedDates.includes(selectedDate.toISOString().split('T')[0])).length);
 
@@ -224,7 +224,7 @@ const MainPage = ({ token, isLoggedIn }) => {
     return (
         <div className="main-page">
             {showPopup && <AllHabitsCompletedPopup setHabitCount={setHabitCount} />}
-            <div className = "header">
+            {/* <div className = "header">
                 <h1 className = "title">Habit Buddy</h1>
 
                 {showAvatar && 
@@ -244,7 +244,7 @@ const MainPage = ({ token, isLoggedIn }) => {
                         token={token}
                     />
                 )}
-            </div>
+            </div> */}
 
             <DateCarousel
                 selectedDate={selectedDate}

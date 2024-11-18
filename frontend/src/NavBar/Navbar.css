@@ -4,7 +4,7 @@
     --font-size: 20px;
     --font-weight-normal: 400;
     --font-weight-bold: 700;
-    --border-radius-medium: 8px;
+    --black: rgba(0, 0, 0, 0.841);
 }
 
 body {
@@ -13,14 +13,31 @@ body {
     font-weight: var(--font-weight-normal);
 }
 
+.title {
+    /* width: 100%; */
+    font-family: 'Nunito', sans-serif;
+    font-size: 2rem;
+    /* color: white; */
+    /* margin-left: auto; */
+    /* font options - Nunito Cinzel Bangers MedievalSharp "Fredoka One" Poppins*/
+    
+}
+
+.title:hover {
+    background-color: whitesmoke;
+    color: var(--black);
+}
+
+.logout {
+    font-size: 1.5rem;
+    margin-right: 40px;
+}
+
 nav {
-    font-family: var(--font-family);
-    font-size: var(--font-size);
-    font-weight: var(--font-weight-normal);
-    background-color: #0b0b0b;
-    padding: 1rem;
+    background-color: var(--black);
+    padding: 1.5rem 7rem;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -30,29 +47,26 @@ nav a {
     font-weight: var(--font-weight-normal);
     color: white;
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    /* padding: 0.5rem 1rem; */
     border-radius: 4px;
     transition: background-color 0.3s ease;
 }
 
-nav a:hover {
-    color:black;
-    background-color: whitesmoke;
-}
-
+nav a:hover,
 nav a:active {
+    /* /* padding: 10px;  */
+    color:var(--black);
     background-color: whitesmoke;
-    color:black;
-}
+} 
 
 nav a:focus {
     outline: 2px solid #007bff;
     outline-offset: 2px;
-    color: black;
+    color: var(--black);
     background-color: whitesmoke;
 }
 
 .active-link {
-    background-color: black;
+    background-color: var(--black);
     color: whitesmoke;
 }

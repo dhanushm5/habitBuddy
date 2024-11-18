@@ -97,7 +97,7 @@ input[type="checkbox"]:checked:hover {
     background-color: var(--background-color);
 }
 
-.header {
+/* .header {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -110,9 +110,9 @@ input[type="checkbox"]:checked:hover {
 .title {
     font-family: 'Nunito', sans-serif;
     font-size: 5rem;
-    /* font options - Nunito Cinzel Bangers MedievalSharp "Fredoka One" Poppins*/
+    /* font options - Nunito Cinzel Bangers MedievalSharp "Fredoka One" Poppins
     
-}
+} */
 
 .selected {
     font-weight: bold;
@@ -162,8 +162,8 @@ input[type="checkbox"]:checked:hover {
     text-align: center;
     align-items: center;
     margin: 5px;
-    font-size: 20px;
-    padding: 10px 10px;
+    font-size: 19px;
+    padding: 10px 15px;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 

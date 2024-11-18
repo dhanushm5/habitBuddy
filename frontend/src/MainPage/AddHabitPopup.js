@@ -94,8 +94,8 @@ const AddHabitPopup = ({
                     ))}
                 </div>
             </div>
-            <button class = "button" onClick={handleAddClick}>Add Habit</button>
-            <button onClick={resetHabitForm}>Cancel</button>
+            <button className = "popup-button" onClick={handleAddClick}>Add Habit</button>
+            <button className = "popup-button" onClick={resetHabitForm}>Cancel</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
     );
