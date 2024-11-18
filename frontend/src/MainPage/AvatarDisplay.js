@@ -1,19 +1,21 @@
+// AvatarDisplay.js
+
 import React from 'react';
 
 const AvatarDisplay = ({ avatar }) => {
     const { color, accessory, shape } = avatar;
 
     const avatarStyles = {
-        backgroundColor: color,
+        backgroundColor: color || '#ffcc00', 
         width: '100px',
         height: '100px',
-        borderRadius: shape === 'circle' ? '50%' : shape === 'square' ? '0%' : '0%', // Default for square is no rounded corners
+        borderRadius: shape === 'circle' ? '50%' : shape === 'square' ? '0%' : '0%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         position: 'relative',
         border: '2px solid #000',
-        clipPath: shape === 'triangle' ? 'polygon(50% 0%, 0% 100%, 100% 100%)' : 'none', // Add triangle shape
+        clipPath: shape === 'triangle' ? 'polygon(50% 0%, 0% 100%, 100% 100%)' : 'none',
     };
 
     const eyeStyles = {
