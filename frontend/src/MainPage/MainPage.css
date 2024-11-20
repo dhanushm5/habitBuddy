@@ -1,6 +1,7 @@
 :root {
     /* Global CSS Variables */
     --background-color: #efe9f4ff; /* Magnolia */
+    /* --background-color: white; */
     --button-background: #3eb489; /* Mint */
     --checkbox-background: #dadcdc; 
     --checkbox-checked-background: var(--button-background); 
@@ -162,7 +163,7 @@ input[type="checkbox"]:checked:hover {
     text-align: center;
     align-items: center;
     margin: 5px;
-    font-size: 20px;
+    font-size: 18px;
     padding: 10px 10px;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }

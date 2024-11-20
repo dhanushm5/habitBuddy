@@ -253,7 +253,7 @@ const MainPage = ({ token, isLoggedIn }) => {
 
             <h2 className = "habits-for-date">Habits for {selectedDate.toLocaleDateString('en-GB')}</h2>
             <HabitList 
-                habits={habits.filter(habit => habit.frequencyDays.includes(selectedDate.getDay()))} 
+                habits={habits.filter(habit => habit.frequencyDays.includes(selectedDate.getDay()) && habit.startDate <= selectedDate.toISOString().split('T')[0])} 
                 selectedDate={selectedDate} 
                 handleToggleHabit={handleToggleHabit} 
                 handleEditHabit={handleEditHabit}
