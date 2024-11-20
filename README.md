@@ -1,6 +1,19 @@
 # HabitBuddy
 
 HabitBuddy is an application designed to help you build and maintain good habits. Track daily activities, set goals, and monitor progress over time.
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Detailed Installation Guide](#detailed-installation-guide)
+    - [Prerequisites](#prerequisites)
+    - [Steps to Install](#steps-to-install)
+    - [Building for Production](#building-for-production)
+    - [Running Tests](#running-tests)
+    - [Troubleshooting](#troubleshooting)
 
 ## Features
 
