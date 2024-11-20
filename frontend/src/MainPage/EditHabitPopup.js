@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm, setShowEditHabitPopup, setUpdatedHabit }) => {
     const [habit, setHabit] = useState(oldHabit);
     const [error, setError] = useState('');
-
+    const currentColor = habit.color;
     // Update local state when `oldHabit` changes
     useEffect(() => {
         setHabit(oldHabit);
@@ -50,22 +50,24 @@ const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm, setShowEdit
 
     return (
         <div className="popup">
-            <h3>Edit Habit</h3>
-            <input
-                type="text"
-                placeholder="Edit Habit"
-                value={habit.name || ''}  // Fallback for undefined habit name
-                onChange={(e) => setHabit({ ...habit, name: e.target.value })}
-            />
+            <h2>Edit Habit</h2>
+            <div className = "habit-textbox">
+                <input
+                    type="text"
+                    placeholder="Edit Habit"
+                    value={habit.name || ''}  // Fallback for undefined habit name
+                    onChange={(e) => setHabit({ ...habit, name: e.target.value })}
+                />
+            </div>
             <div className="frequency-selector">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, index) => (
                     <label key={index}>
+                        {day}
                         <input
                             type="checkbox"
                             checked={habit.frequencyDays.includes(index)}
                             onChange={() => handleFrequencyChange(index)}
                         />
-                        {day}
                     </label>
                 ))}
             </div>
@@ -87,20 +89,22 @@ const EditHabitPopup = ({ oldHabit, handleEditHabit, resetHabitForm, setShowEdit
                             className="color-swatch"
                             style={{
                                 backgroundColor: color,
-                                width: '30px',
-                                height: '30px',
+                                width: currentColor === color ? '33px' : '30px',
+                                height: currentColor === color ? '33px' : '30px',
                                 borderRadius: '50%',
                                 cursor: 'pointer',
-                                border: habit.color === color ? '2px solid black' : '1px solid gray',
+                                border: currentColor === color ? '3px solid black' : '1px solid gray',
                             }}
                             onClick={() => handleColorChange(color)}  // Directly set the color
                         />
                     ))}
                 </div>
             </div>
-            <button class = "button" onClick={handleEditClick}>Save</button>
-            <button onClick={resetHabitForm}>Cancel</button>
-            {error && <div className="error">{error}</div>}
+            {error && <p className = "error" style = {{color: 'red', 
+                textAlign: 'left', paddingLeft: '5px', 
+                fontSize: '20px', fontWeight: 'bold'}}>{error}</p>}
+            <button class = "popup-button" onClick={handleEditClick}>Save</button>
+            <button class = "popup-button" onClick={resetHabitForm}>Cancel</button>
         </div>
     );
 };
