@@ -9,6 +9,8 @@ interface HabitCalendarProps {
 
 export function HabitCalendar({ habits, selectedDate, onDateChange }: HabitCalendarProps) {
   const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
   const currentMonth = selectedDate.getMonth();
   const currentYear = selectedDate.getFullYear();
 
@@ -18,22 +20,40 @@ export function HabitCalendar({ habits, selectedDate, onDateChange }: HabitCalen
   const prevMonth = () => {
     const newDate = new Date(selectedDate);
     newDate.setMonth(currentMonth - 1);
+    newDate.setHours(0, 0, 0, 0);
     onDateChange(newDate);
   };
 
   const nextMonth = () => {
     const newDate = new Date(selectedDate);
     newDate.setMonth(currentMonth + 1);
+    newDate.setHours(0, 0, 0, 0);
     onDateChange(newDate);
   };
 
   const getCompletionRate = (date: Date) => {
-    const dateString = date.toISOString().split('T')[0];
+    // Use local date components to avoid timezone issues
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
     const dayOfWeek = date.getDay();
 
-    const scheduledHabits = habits.filter(habit =>
-      habit.frequencyDays.includes(dayOfWeek)
-    );
+    // Only count habits that were created on or before this date
+    const scheduledHabits = habits.filter(habit => {
+      // Check if habit is scheduled for this day of week
+      if (!habit.frequencyDays.includes(dayOfWeek)) return false;
+      
+      // Check if habit was created before or on this date
+      if (habit.startDate) {
+        const habitStartDate = new Date(habit.startDate);
+        habitStartDate.setHours(0, 0, 0, 0);
+        date.setHours(0, 0, 0, 0);
+        if (date < habitStartDate) return false;
+      }
+      
+      return true;
+    });
 
     if (scheduledHabits.length === 0) return null;
 
@@ -60,18 +80,25 @@ export function HabitCalendar({ habits, selectedDate, onDateChange }: HabitCalen
 
   for (let day = 1; day <= daysInMonth; day++) {
     const date = new Date(currentYear, currentMonth, day);
-    const dateString = date.toISOString().split('T')[0];
-    const todayString = today.toISOString().split('T')[0];
-    const selectedString = selectedDate.toISOString().split('T')[0];
+    date.setHours(0, 0, 0, 0);
     const completionRate = getCompletionRate(date);
 
-    const isToday = dateString === todayString;
-    const isSelected = dateString === selectedString;
+    // Use date components for comparison to avoid timezone issues
+    const isToday = currentYear === today.getFullYear() && 
+                    currentMonth === today.getMonth() && 
+                    day === today.getDate();
+    const isSelected = currentYear === selectedDate.getFullYear() && 
+                       currentMonth === selectedDate.getMonth() && 
+                       day === selectedDate.getDate();
 
     days.push(
       <button
         key={day}
-        onClick={() => onDateChange(date)}
+        onClick={() => {
+          const newDate = new Date(currentYear, currentMonth, day);
+          newDate.setHours(0, 0, 0, 0);
+          onDateChange(newDate);
+        }}
         className={`aspect-square rounded-lg flex items-center justify-center text-sm font-medium transition-all duration-200 ${
           getDayColor(completionRate)
         } ${

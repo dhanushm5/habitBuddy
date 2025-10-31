@@ -34,6 +34,23 @@ module.exports = (sequelize, DataTypes) => {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    lastCompletedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      comment: 'Timestamp of last completion',
+    },
+    streak: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
+      comment: 'Current streak count',
+    },
+    longestStreak: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+      allowNull: false,
+      comment: 'Longest streak achieved',
     }
   }, {
     tableName: 'habits',

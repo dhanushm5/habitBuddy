@@ -18,7 +18,19 @@ export function HabitCard({
   onDelete,
   onViewStats,
 }: HabitCardProps) {
-  const dateString = date.toISOString().split('T')[0];
+  // Use local date components to avoid timezone issues
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const dateString = `${year}-${month}-${day}`;
+  
+  const today = new Date();
+  const todayYear = today.getFullYear();
+  const todayMonth = String(today.getMonth() + 1).padStart(2, '0');
+  const todayDay = String(today.getDate()).padStart(2, '0');
+  const todayString = `${todayYear}-${todayMonth}-${todayDay}`;
+  
+  const isToday = dateString === todayString;
   const isCompleted = habit.completedDates.includes(dateString);
 
   return (
@@ -30,11 +42,15 @@ export function HabitCard({
         <div className="flex items-center space-x-4 flex-1">
           <button
             onClick={() => onToggleComplete(habit, date)}
+            disabled={!isToday}
             className={`flex-shrink-0 w-10 h-10 rounded-lg border-2 flex items-center justify-center transition-all duration-200 ${
-              isCompleted
+              !isToday
+                ? 'bg-gray-100 border-gray-200 cursor-not-allowed opacity-50'
+                : isCompleted
                 ? 'bg-gradient-to-br from-blue-500 to-emerald-500 border-transparent'
-                : 'border-gray-300 hover:border-gray-400'
+                : 'border-gray-300 hover:border-gray-400 cursor-pointer'
             }`}
+            title={!isToday ? 'You can only complete habits for today' : ''}
           >
             {isCompleted && <Check className="w-6 h-6 text-white" />}
           </button>

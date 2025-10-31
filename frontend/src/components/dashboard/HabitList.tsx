@@ -24,7 +24,20 @@ export function HabitList({
 
   const isHabitScheduledForDate = (habit: Habit, date: Date) => {
     const dayOfWeek = date.getDay();
-    return habit.frequencyDays.includes(dayOfWeek);
+    
+    // Check if habit is scheduled for this day of week
+    if (!habit.frequencyDays.includes(dayOfWeek)) return false;
+    
+    // Check if habit was created on or before this date
+    if (habit.startDate) {
+      const habitStartDate = new Date(habit.startDate);
+      habitStartDate.setHours(0, 0, 0, 0);
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      if (checkDate < habitStartDate) return false;
+    }
+    
+    return true;
   };
 
   const scheduledHabits = habits.filter(habit => isHabitScheduledForDate(habit, selectedDate));
@@ -45,14 +58,33 @@ export function HabitList({
     );
   }
 
+  // Use local date components to avoid timezone issues
+  const selectedYear = selectedDate.getFullYear();
+  const selectedMonth = selectedDate.getMonth();
+  const selectedDay = selectedDate.getDate();
+  
+  const today = new Date();
+  const todayYear = today.getFullYear();
+  const todayMonth = today.getMonth();
+  const todayDay = today.getDate();
+  
+  const isToday = selectedYear === todayYear && selectedMonth === todayMonth && selectedDay === todayDay;
+
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-2xl shadow-lg p-6">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-lg font-bold text-gray-900">
-              {getDayName(selectedDate)}
-            </h3>
+            <div className="flex items-center space-x-2">
+              <h3 className="text-lg font-bold text-gray-900">
+                {getDayName(selectedDate)}
+              </h3>
+              {isToday && (
+                <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
+                  Today
+                </span>
+              )}
+            </div>
             <p className="text-sm text-gray-600">
               {selectedDate.toLocaleDateString('en-US', {
                 month: 'long',
@@ -63,7 +95,7 @@ export function HabitList({
           </div>
           <div className="text-right">
             <p className="text-2xl font-bold text-gray-900">{scheduledHabits.length}</p>
-            <p className="text-sm text-gray-600">habits today</p>
+            <p className="text-sm text-gray-600">habits {isToday ? 'today' : 'scheduled'}</p>
           </div>
         </div>
 
