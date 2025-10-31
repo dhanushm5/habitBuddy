@@ -16,7 +16,7 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 2000;
 
 
 app.use(helmet()); 
@@ -36,13 +36,24 @@ app.use(limiter);
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // Nodemailer transporter
-const transporter = nodemailer.createTransport({
-  service: 'Gmail', // Use Gmail or any other email service
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    // Verify email configuration on startup
+    transporter.verify((error, success) => {
+      if (error) {
+        console.error('❌ Email configuration error:', error.message);
+        console.error('Please check your EMAIL_USER and EMAIL_PASS in .env file');
+        console.error('For Gmail, you need an App Password: https://myaccount.google.com/apppasswords');
+      } else {
+        console.log('✅ Email server is ready to send messages');
+      }
+    });
 
 async function run() {
   try {
@@ -80,10 +91,10 @@ async function run() {
           res.send({ token });
       });
 
-      // CSRF Token Endpoint (for frontend)
-      app.get('/csrf-token', (req, res) => {
-          res.json({ csrfToken: req.csrfToken() });
-      });
+      // CSRF Token Endpoint (for frontend) - Currently disabled, enable with csurf middleware if needed
+      // app.get('/csrf-token', (req, res) => {
+      //     res.json({ csrfToken: req.csrfToken() });
+      // });
     // Password Reset Request
     app.post('/forgot-password', async (req, res) => {
       const { email } = req.body;
@@ -419,28 +430,109 @@ async function run() {
       }
     });
 
+    // Store active cron jobs to prevent duplicates
+    const activeCronJobs = new Map();
+
     const scheduleReminders = async () => {
-      const habits = await Habit.findAll({ where: { reminderTime: { [Op.ne]: null } } });
-      habits.forEach(habit => {
-        if (!habit.reminderTime) return;
-        const [hour, minute] = habit.reminderTime.split(':');
-        if (hour !== undefined && minute !== undefined) {
-          cron.schedule(`${minute} ${hour} * * *`, async () => {
-            const user = await User.findByPk(habit.userId);
-            if (user) {
-              await transporter.sendMail({
-                to: user.email,
-                subject: 'Habit Reminder',
-                text: `Reminder to complete your habit: ${habit.name}`,
-              });
+      try {
+        // Clear all existing cron jobs before rescheduling
+        activeCronJobs.forEach((job) => {
+          job.stop();
+        });
+        activeCronJobs.clear();
+
+        // Fetch all habits with reminder times
+        const habits = await Habit.findAll({ where: { reminderTime: { [Op.ne]: null } } });
+        
+        habits.forEach(habit => {
+          if (!habit.reminderTime) return;
+          
+          const [hour, minute] = habit.reminderTime.split(':');
+          if (hour === undefined || minute === undefined) {
+            console.warn(`Invalid reminder time format for habit ${habit.id}: ${habit.reminderTime}`);
+            return;
+          }
+
+          // Create a unique key for this habit's reminder
+          const jobKey = `habit_${habit.id}`;
+          
+          // Schedule the cron job (runs daily at the specified time)
+          const job = cron.schedule(`${minute} ${hour} * * *`, async () => {
+            try {
+              const user = await User.findByPk(habit.userId);
+              if (user) {
+                console.log(`Sending reminder for habit "${habit.name}" to ${user.email}`);
+                await transporter.sendMail({
+                  to: user.email,
+                  subject: `Habit Reminder: ${habit.name}`,
+                  html: `
+                    <h2>Habit Reminder</h2>
+                    <p>Hi there!</p>
+                    <p>This is a reminder to complete your habit: <strong>${habit.name}</strong></p>
+                    <p>Keep up the great work! 💪</p>
+                  `,
+                  text: `Reminder to complete your habit: ${habit.name}`,
+                });
+                console.log(`Reminder sent successfully for habit "${habit.name}"`);
+              }
+            } catch (error) {
+              console.error(`Failed to send reminder for habit ${habit.id}:`, error.message);
             }
           });
-        }
-      });
+
+          // Store the job so we can stop it later
+          activeCronJobs.set(jobKey, job);
+        });
+
+        console.log(`Scheduled ${activeCronJobs.size} habit reminders`);
+      } catch (error) {
+        console.error('Error scheduling reminders:', error);
+      }
     };
 
-    // Call scheduleReminders function
+    // Call scheduleReminders function on server start
     scheduleReminders();
+
+    // Test endpoint to manually send a reminder (useful for testing email configuration)
+    app.post('/habits/:id/test-reminder', authenticateJWT, async (req, res) => {
+      try {
+        const { id } = req.params;
+        const habit = await Habit.findOne({ where: { id, userId: req.user.id } });
+        if (!habit) {
+          return res.status(404).send({ error: 'Habit not found' });
+        }
+
+        const user = await User.findByPk(req.user.id);
+        if (!user) {
+          return res.status(404).send({ error: 'User not found' });
+        }
+
+        // Send test reminder email
+        await transporter.sendMail({
+          to: user.email,
+          subject: `Test Reminder: ${habit.name}`,
+          html: `
+            <h2>Test Habit Reminder</h2>
+            <p>Hi there!</p>
+            <p>This is a test reminder for your habit: <strong>${habit.name}</strong></p>
+            <p>If you received this email, your reminder system is working correctly! 💪</p>
+          `,
+          text: `Test reminder for your habit: ${habit.name}`,
+        });
+
+        res.status(200).send({ 
+          message: 'Test reminder sent successfully',
+          sentTo: user.email,
+          habitName: habit.name
+        });
+      } catch (err) {
+        console.error('Failed to send test reminder:', err);
+        res.status(500).send({ 
+          error: 'Failed to send test reminder', 
+          details: err.message 
+        });
+      }
+    });
 
     // Start the server
     app.listen(PORT, () => {
