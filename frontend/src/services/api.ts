@@ -146,7 +146,8 @@ class ApiService {
       body: JSON.stringify({ date }),
     });
     if (!response.ok) {
-      throw new Error('Failed to mark habit as complete');
+      const error = await response.json();
+      throw new Error(error.message || error.error || 'Failed to mark habit as complete');
     }
     return response.json();
   }
@@ -158,7 +159,8 @@ class ApiService {
       body: JSON.stringify({ date }),
     });
     if (!response.ok) {
-      throw new Error('Failed to mark habit as incomplete');
+      const error = await response.json();
+      throw new Error(error.message || error.error || 'Failed to mark habit as incomplete');
     }
     return response.json();
   }

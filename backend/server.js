@@ -222,6 +222,27 @@ async function run() {
       }
     });
 
+    // Get user statistics using stored procedure
+    app.get('/habits/stats/summary', authenticateJWT, async (req, res) => {
+      try {
+        const [results] = await sequelize.query(
+          'CALL get_user_stats(:userId)',
+          {
+            replacements: { userId: req.user.id }
+          }
+        );
+        res.status(200).send(results[0] || {
+          total_habits: 0,
+          habits_with_completions: 0,
+          total_current_streak: 0,
+          best_streak: 0,
+          total_completions: 0
+        });
+      } catch (err) {
+        res.status(500).send({ error: 'Failed to fetch stats', details: err.message });
+      }
+    });
+
     // Get Habit by ID
     app.get('/habits/:id', authenticateJWT, async (req, res) => {
       try {
@@ -245,17 +266,66 @@ async function run() {
       try {
         const { id } = req.params;
         const { date } = req.body;
+        
+        console.log('Complete habit request:', { habitId: id, date, userId: req.user.id });
+        
+        // Validate that the date is today (using local date to avoid timezone issues)
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const today = `${year}-${month}-${day}`;
+        console.log('Server today (local):', today);
+        
+        if (date !== today) {
+          console.log('Date mismatch! Received:', date, 'Expected:', today);
+          return res.status(400).send({ 
+            error: 'Invalid date',
+            message: 'You can only complete habits for today'
+          });
+        }
+        
         const habit = await Habit.findOne({ where: { id, userId: req.user.id } });
         if (!habit) {
+          console.log('Habit not found for id:', id);
           return res.status(404).send({ error: 'Habit not found' });
         }
+        
+        console.log('Found habit:', habit.name);
         const completedDates = JSON.parse(habit.completedDates || '[]');
+        console.log('Current completed dates:', completedDates);
+        
         if (!completedDates.includes(date)) {
           completedDates.push(date);
+          console.log('Added date, new array:', completedDates);
+        } else {
+          console.log('Date already in array');
         }
+        
+        // Update habit
+        console.log('Updating habit with dates:', JSON.stringify(completedDates));
         await Habit.update({ completedDates: JSON.stringify(completedDates) }, { where: { id: habit.id } });
-        res.status(200).send({ message: 'Habit marked as completed' });
+        
+        // Calculate streak using stored procedure
+        await sequelize.query('CALL calculate_habit_streak(:habitId)', {
+          replacements: { habitId: id }
+        });
+        
+        // Fetch updated habit with new streak info
+        const updatedHabit = await Habit.findByPk(id);
+        const obj = updatedHabit.toJSON();
+        obj.completedDates = JSON.parse(obj.completedDates || '[]');
+        obj.frequencyDays = JSON.parse(obj.frequencyDays || '[]');
+        obj._id = obj.id.toString();
+        
+        console.log('✅ Habit completed successfully! New completed dates:', obj.completedDates);
+        
+        res.status(200).send({ 
+          message: 'Habit marked as completed',
+          habit: obj
+        });
       } catch (err) {
+        console.error('❌ Error completing habit:', err);
         res.status(500).send({ error: 'Failed to update habit', details: err.message });
       }
     });
@@ -265,6 +335,25 @@ async function run() {
       try {
         const { id } = req.params;
         const { date } = req.body;
+        
+        console.log('Incomplete habit request:', { habitId: id, date, userId: req.user.id });
+        
+        // Validate that the date is today (using local date to avoid timezone issues)
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const today = `${year}-${month}-${day}`;
+        console.log('Server today (local):', today);
+        
+        if (date !== today) {
+          console.log('Date mismatch! Received:', date, 'Expected:', today);
+          return res.status(400).send({ 
+            error: 'Invalid date',
+            message: 'You can only uncomplete habits for today'
+          });
+        }
+        
         const habit = await Habit.findOne({ where: { id, userId: req.user.id } });
         if (!habit) {
           return res.status(404).send({ error: 'Habit not found' });
@@ -274,8 +363,26 @@ async function run() {
         if (index > -1) {
           completedDates.splice(index, 1);
         }
+        
+        // Update habit
         await Habit.update({ completedDates: JSON.stringify(completedDates) }, { where: { id: habit.id } });
-        res.status(200).send({ message: 'Habit marked as incomplete' });
+        
+        // Recalculate streak using stored procedure
+        await sequelize.query('CALL calculate_habit_streak(:habitId)', {
+          replacements: { habitId: id }
+        });
+        
+        // Fetch updated habit with new streak info
+        const updatedHabit = await Habit.findByPk(id);
+        const obj = updatedHabit.toJSON();
+        obj.completedDates = JSON.parse(obj.completedDates || '[]');
+        obj.frequencyDays = JSON.parse(obj.frequencyDays || '[]');
+        obj._id = obj.id.toString();
+        
+        res.status(200).send({ 
+          message: 'Habit marked as incomplete',
+          habit: obj
+        });
       } catch (err) {
         res.status(500).send({ error: 'Failed to update habit', details: err.message });
       }
@@ -529,6 +636,53 @@ async function run() {
         console.error('Failed to send test reminder:', err);
         res.status(500).send({ 
           error: 'Failed to send test reminder', 
+          details: err.message 
+        });
+      }
+    });
+
+    // Manual trigger to cleanup expired reset tokens
+    app.post('/admin/cleanup-tokens', authenticateJWT, async (req, res) => {
+      try {
+        const [results] = await sequelize.query('CALL cleanup_expired_tokens()');
+        res.status(200).send({ 
+          message: 'Token cleanup completed',
+          deletedCount: results[0]?.deleted_tokens || 0
+        });
+      } catch (err) {
+        res.status(500).send({ 
+          error: 'Failed to cleanup tokens', 
+          details: err.message 
+        });
+      }
+    });
+
+    // Manual trigger to recalculate streak for a habit
+    app.post('/habits/:id/recalculate-streak', authenticateJWT, async (req, res) => {
+      try {
+        const { id } = req.params;
+        const habit = await Habit.findOne({ where: { id, userId: req.user.id } });
+        if (!habit) {
+          return res.status(404).send({ error: 'Habit not found' });
+        }
+
+        await sequelize.query('CALL calculate_habit_streak(:habitId)', {
+          replacements: { habitId: id }
+        });
+
+        const updatedHabit = await Habit.findByPk(id);
+        const obj = updatedHabit.toJSON();
+        obj.completedDates = JSON.parse(obj.completedDates || '[]');
+        obj.frequencyDays = JSON.parse(obj.frequencyDays || '[]');
+        obj._id = obj.id.toString();
+
+        res.status(200).send({ 
+          message: 'Streak recalculated successfully',
+          habit: obj
+        });
+      } catch (err) {
+        res.status(500).send({ 
+          error: 'Failed to recalculate streak', 
           details: err.message 
         });
       }

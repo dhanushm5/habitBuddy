@@ -54,12 +54,19 @@ export function CreateHabitModal({ onClose, onSuccess }: CreateHabitModalProps) 
     setLoading(true);
 
     try {
+      // Use local date components to avoid timezone issues
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const startDate = `${year}-${month}-${day}`;
+      
       await api.createHabit({
         name,
         color,
         frequencyDays,
         reminderTime: reminderTime || undefined,
-        startDate: new Date().toISOString().split('T')[0],
+        startDate,
       });
       onSuccess();
       onClose();
